@@ -1,0 +1,672 @@
+﻿@page
+@model WatchesTok.Pages.AdminModel
+@{
+    ViewData["Title"] = "Pannello Amministratore";
+}
+
+<style>
+    /* Stili specifici per la dashboard admin */
+    .admin-header {
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+        .admin-header:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            border-radius: 3px;
+        }
+
+    .admin-card {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--box-shadow);
+        border: none;
+        transition: all 0.3s ease;
+        animation: fadeIn 0.6s ease;
+    }
+
+        .admin-card .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+
+            .admin-card .card-header h2 {
+                margin: 0;
+                display: flex;
+                align-items: center;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+            }
+
+                .admin-card .card-header h2 i {
+                    margin-right: 10px;
+                }
+
+        .admin-card .card-body {
+            padding: 1.5rem;
+        }
+
+    .admin-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+        .admin-table th {
+            background-color: rgba(0,0,0,0.03);
+            font-weight: 600;
+            color: var(--primary-dark);
+            border-bottom: 2px solid rgba(0,0,0,0.05);
+            padding: 1rem;
+        }
+
+        .admin-table td {
+            padding: 0.8rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background-color 0.2s ease;
+        }
+
+        .admin-table tr:hover td {
+            background-color: rgba(83, 75, 174, 0.05);
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 3px;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    .edit-user-btn {
+        background-color: var(--primary-light);
+    }
+
+    .delete-user-btn {
+        background-color: #f44336;
+    }
+
+    .save-user-btn {
+        background-color: var(--success-color);
+    }
+
+    .cancel-edit-btn {
+        background-color: #757575;
+    }
+
+    .spinner-container {
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+        .spinner-container .spinner-text {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+    /* Decorazione a tema orologi */
+    .watch-decoration {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 2px solid rgba(0,0,0,0.05);
+        top: -60px;
+        right: -60px;
+        z-index: 0;
+    }
+
+        .watch-decoration:before {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.03);
+            top: 20px;
+            left: 20px;
+        }
+
+        .watch-decoration:after {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(83,75,174,0.1), rgba(83,75,174,0.05));
+            top: 40px;
+            left: 40px;
+        }
+
+    /* Animazione per il caricamento */
+    @@keyframes spinnerPulse {
+        0%
+
+    {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    }
+
+    .custom-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(83,75,174,0.1);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite, spinnerPulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes spin {
+        0%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* Stili per i campi di input nella modalità modifica */
+    .admin-table input {
+        border: 1px solid var(--primary-light);
+        border-radius: 4px;
+        box-shadow: none;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+        .admin-table input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(83,75,174,0.25);
+            outline: none;
+        }
+
+    /* Animazioni per messaggi */
+    .alert {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        animation: slideIn 0.3s ease;
+    }
+
+    @@keyframes slideIn {
+        from
+
+    {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    }
+
+    /* Pulsanti più grandi per mobile */
+    @@media (max-width: 768px) {
+        .action-btn
+
+    {
+        width: 42px;
+        height: 42px;
+    }
+
+    .admin-table td, .admin-table th {
+        padding: 0.6rem;
+    }
+
+    .admin-table {
+        min-width: 600px;
+    }
+
+    }
+</style>
+
+<div class="container mt-4 animate-in" style="animation-delay: 0.1s">
+    <h1 class="admin-header">Pannello di Amministrazione</h1>
+
+    <div class="card admin-card">
+        <div class="card-header text-white">
+            <h2 class="h4">
+                <i class="fas fa-users"></i> Utenti Registrati
+            </h2>
+        </div>
+        <div class="card-body position-relative">
+            <!-- Decorazioni a tema orologio -->
+            <div class="watch-decoration"></div>
+
+            <div class="table-responsive">
+                <table class="table admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Cognome</th>
+                            <th>Email</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Utenti verranno caricati qui dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="loading" class="spinner-container">
+                <div class="custom-spinner"></div>
+                <div class="spinner-text">Caricamento utenti...</div>
+            </div>
+            <div id="error-message" class="alert alert-danger d-none">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Si è verificato un errore durante il caricamento degli utenti.
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Tutto il codice JavaScript esistente rimane identico
+        $(document).ready(function () {
+            // Verifica se l'utente è admin usando localStorage invece di sessionStorage
+            // e controlla la struttura corretta dei dati
+            let isAdmin = false;
+            try {
+                // Controlla se i dati admin sono stati salvati nel localStorage
+                const isAdminFlag = localStorage.getItem('isAdmin');
+                if (isAdminFlag === 'true') {
+                    isAdmin = true;
+                } else {
+                    // Controlla anche dentro l'oggetto userData se esiste
+                    const userDataStr = localStorage.getItem('userData');
+                    if (userDataStr) {
+                        const userData = JSON.parse(userDataStr);
+                        if (userData && userData.email === 'admin@admin.it') {
+                            isAdmin = true;
+                        }
+                    }
+
+                    // Controlla anche l'oggetto utente completo
+                    const utenteStr = localStorage.getItem('utente');
+                    if (utenteStr) {
+                        const utente = JSON.parse(utenteStr);
+                        if (utente && utente.email === 'admin@admin.it') {
+                            isAdmin = true;
+                        }
+                    }
+                }
+
+                if (!isAdmin) {
+                    console.log("Accesso negato: utente non è admin");
+                    window.location.href = '/';
+                    return;
+                }
+
+                console.log("Accesso admin verificato con successo");
+                // Carica la lista degli utenti
+                loadUsers();
+
+            } catch (error) {
+                console.error("Errore durante la verifica dei permessi admin:", error);
+                window.location.href = '/';
+                return;
+            }
+        });
+
+        function loadUsers() {
+            $.ajax({
+                url: '/api/Admin/users',
+                type: 'GET',
+                success: function (data) {
+                    $('#loading').hide();
+
+                    if (data && data.length > 0) {
+                        var tableBody = $('#usersTableBody');
+                        tableBody.empty();
+
+                        $.each(data, function (index, user) {
+                            // Aggiungi una classe speciale per l'admin per evidenziarlo
+                            const isAdminUser = user.email === 'admin@admin.it';
+                            const adminClass = isAdminUser ? 'table-primary' : '';
+
+                            var row = `<tr class="${adminClass}">
+                                <td>${user.utenteID}</td>
+                                <td class="user-name" data-id="${user.utenteID}" data-original-name="${user.nome || ''}">${user.nome || '-'}</td>
+                                <td class="user-surname" data-id="${user.utenteID}" data-original-surname="${user.cognome || ''}">${user.cognome || '-'}</td>
+                                <td class="user-email" data-id="${user.utenteID}" data-original-email="${user.email}">
+                                    ${user.email}
+                                    ${isAdminUser ? '<span class="badge bg-warning ms-2">Admin</span>' : ''}
+                                </td>
+                                <td>
+                                    <button class="btn action-btn edit-user-btn" data-id="${user.utenteID}" title="Modifica">
+                                        <i class="fas fa-edit text-white"></i>
+                                    </button>
+                                    <button class="btn action-btn delete-user-btn" data-id="${user.utenteID}" title="Elimina" ${isAdminUser ? 'disabled' : ''}>
+                                        <i class="fas fa-trash text-white"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+                            tableBody.append(row);
+                        });
+                    } else {
+                        $('#usersTableBody').html('<tr><td colspan="5" class="text-center py-4">Nessun utente trovato.</td></tr>');
+                    }
+                },
+                error: function (error) {
+                    $('#loading').hide();
+                    $('#error-message').removeClass('d-none');
+                    console.error('Errore:', error);
+                }
+            });
+        }
+
+        // Il resto del codice JavaScript rimane invariato
+
+        // Listener per il pulsante elimina
+        $(document).on('click', '.delete-user-btn', function() {
+            const userId = $(this).data('id');
+            const userEmail = $(this).closest('tr').find('.user-email').text().trim();
+
+            if (confirm(`Sei sicuro di voler eliminare l'utente ${userEmail}?`)) {
+                deleteUser(userId);
+            }
+        });
+
+        // Listener per il pulsante modifica
+        $(document).on('click', '.edit-user-btn', function() {
+            const userId = $(this).data('id');
+            const row = $(this).closest('tr');
+
+            const nome = row.find('.user-name').attr('data-original-name');
+            const cognome = row.find('.user-surname').attr('data-original-surname');
+            const email = row.find('.user-email').attr('data-original-email');
+
+            // Trasforma le celle in input per la modifica
+            row.find('.user-name').html(`<input type="text" class="form-control form-control-sm" value="${nome}">`);
+            row.find('.user-surname').html(`<input type="text" class="form-control form-control-sm" value="${cognome}">`);
+
+            // Se è admin, non permettere di cambiare l'email
+            if (email === 'admin@admin.it') {
+                row.find('.user-email').html(`
+                    <input type="email" class="form-control form-control-sm" value="${email}" readonly>
+                    <small class="text-muted">Email admin non modificabile</small>
+                `);
+            } else {
+                row.find('.user-email').html(`<input type="email" class="form-control form-control-sm" value="${email}">`);
+            }
+
+            // Cambia i pulsanti per salvare o annullare
+            const actionCell = $(this).closest('td');
+            actionCell.html(`
+                <button class="btn action-btn save-user-btn" data-id="${userId}" title="Salva">
+                    <i class="fas fa-check text-white"></i>
+                </button>
+                <button class="btn action-btn cancel-edit-btn" data-id="${userId}" title="Annulla">
+                    <i class="fas fa-times text-white"></i>
+                </button>
+            `);
+        });
+
+        // Listener per il pulsante salva
+        $(document).on('click', '.save-user-btn', function() {
+            const userId = $(this).data('id');
+            const row = $(this).closest('tr');
+
+            const nome = row.find('.user-name input').val();
+            const cognome = row.find('.user-surname input').val();
+            const email = row.find('.user-email input').val();
+            const oldEmail = row.find('.user-email').attr('data-original-email');
+
+            updateUser(userId, nome, cognome, email, oldEmail);
+        });
+
+        // Listener per il pulsante annulla
+        $(document).on('click', '.cancel-edit-btn', function() {
+            // Ricarica la tabella per annullare le modifiche
+            loadUsers();
+        });
+
+        // Funzione per eliminare utente
+        function deleteUser(userId) {
+            $.ajax({
+                url: `/api/Admin/users/${userId}`,
+                type: 'DELETE',
+                success: function(response) {
+                    if (response.success) {
+                        // Rimuovi anche dal localStorage se è l'utente attualmente loggato
+                        const userEmail = $(`tr:has(button[data-id="${userId}"]) .user-email`).text().trim();
+                        clearUserFromLocalStorage(userEmail);
+
+                        // Ricarica la tabella
+                        loadUsers();
+
+                        // Mostra messaggio di successo
+                        showNotification('success', 'Utente eliminato con successo!');
+                    } else {
+                        showNotification('danger', 'Errore durante l\'eliminazione: ' + response.message);
+                    }
+                },
+                error: function(error) {
+                    console.error('Errore:', error);
+                    showNotification('danger', 'Si è verificato un errore durante l\'eliminazione');
+                }
+            });
+        }
+
+        // Funzione per aggiornare utente
+        function updateUser(userId, nome, cognome, email, oldEmail) {
+            $.ajax({
+                url: `/api/Admin/users/${userId}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    nome: nome,
+                    cognome: cognome,
+                    email: email
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        // Aggiorna anche il localStorage se è l'utente attualmente loggato
+                        updateUserInLocalStorage(oldEmail, email, nome, cognome);
+
+                        // Ripristina la visualizzazione
+                        loadUsers();
+
+                        // Mostra messaggio di successo
+                        showNotification('success', 'Utente aggiornato con successo!');
+                    } else {
+                        showNotification('danger', 'Errore durante l\'aggiornamento: ' + response.message);
+                    }
+                },
+                error: function(error) {
+                    console.error('Errore:', error);
+                    showNotification('danger', 'Si è verificato un errore durante l\'aggiornamento');
+                }
+            });
+        }
+
+        // Funzione per mostrare notifiche in modo elegante
+        function showNotification(type, message) {
+            // Rimuovi notifiche esistenti
+            $('.admin-notification').remove();
+
+            // Crea nuova notifica
+            const notification = $(`
+                <div class="admin-notification alert alert-${type} position-fixed"
+                     style="top: 20px; right: 20px; z-index: 9999; animation: slideIn 0.3s ease;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                    ${message}
+                </div>
+            `);
+
+            // Aggiungi al body e imposta timer per rimuoverla
+            $('body').append(notification);
+
+            // Rimuovi dopo 3 secondi
+            setTimeout(() => {
+                notification.css('animation', 'slideOut 0.3s ease forwards');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Funzione per aggiornare l'utente nel localStorage
+        function updateUserInLocalStorage(oldEmail, newEmail, newNome, newCognome) {
+            try {
+                // Controlla utente in userData
+                const userDataStr = localStorage.getItem('userData');
+                if (userDataStr) {
+                    const userData = JSON.parse(userDataStr);
+                    if (userData && userData.email === oldEmail) {
+                        userData.email = newEmail;
+                        userData.nome = newNome;
+                        userData.cognome = newCognome;
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                    }
+                }
+
+                // Controlla utente in utente
+                const utenteStr = localStorage.getItem('utente');
+                if (utenteStr) {
+                    const utente = JSON.parse(utenteStr);
+                    if (utente && utente.email === oldEmail) {
+                        utente.email = newEmail;
+                        utente.nome = newNome;
+                        utente.cognome = newCognome;
+                        localStorage.setItem('utente', JSON.stringify(utente));
+                    }
+                }
+
+                // Se l'utente modificato è admin@admin.it, forza il refresh per aggiornare UI
+                if (oldEmail === 'admin@admin.it') {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            } catch (e) {
+                console.error("Errore aggiornamento localStorage", e);
+            }
+        }
+
+        // Funzione per rimuovere l'utente dal localStorage se eliminato
+        function clearUserFromLocalStorage(email) {
+            try {
+                // Controlla se l'utente eliminato è quello loggato
+                const userDataStr = localStorage.getItem('userData');
+                if (userDataStr) {
+                    const userData = JSON.parse(userDataStr);
+                    if (userData && userData.email === email) {
+                        // Forza il logout
+                        localStorage.clear();
+                        showNotification('warning', 'Hai eliminato il tuo utente. Verrai disconnesso.');
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1500);
+                    }
+                }
+
+                const utenteStr = localStorage.getItem('utente');
+                if (utenteStr) {
+                    const utente = JSON.parse(utenteStr);
+                    if (utente && utente.email === email) {
+                        // Forza il logout
+                        localStorage.clear();
+                        showNotification('warning', 'Hai eliminato il tuo utente. Verrai disconnesso.');
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1500);
+                    }
+                }
+
+                // Se l'utente eliminato è admin@admin.it, blocca l'operazione
+                if (email === 'admin@admin.it') {
+                    showNotification('warning', 'Non puoi eliminare l\'account admin!');
+                    loadUsers(); // ricarica la tabella
+                    return false;
+                }
+            } catch (e) {
+                console.error("Errore pulizia localStorage", e);
+            }
+        }
+    </script>
+
+    <style>
+        /* Stile e animazione per le notifiche */
+        @@keyframes slideOut {
+            from
+
+        {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(20px);
+            opacity: 0;
+        }
+
+        }
+
+        .admin-notification {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 280px;
+            border-left: 4px solid;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            border-left-color: var(--success-color);
+        }
+
+        .alert-danger {
+            border-left-color: var(--error-color);
+        }
+
+        .alert-warning {
+            border-left-color: var(--secondary-color);
+        }
+    </style>
+}

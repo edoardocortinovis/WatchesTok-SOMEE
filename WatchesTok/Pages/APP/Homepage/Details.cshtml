@@ -1,0 +1,311 @@
+﻿@page
+@model WatchesTok.Pages.Homepage.DetailsModel
+@{
+    ViewData["Title"] = Model.Post?.Titolo ?? "Dettagli Post";
+}
+
+<div class="container post-details-container">
+    @if (Model.Post != null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                @if (Model.IsVideo)
+                {
+                    <div class="media-container">
+                        <video controls class="media-content">
+                            <source src="@Model.Post.MediaPath" type="video/mp4">
+                            Il tuo browser non supporta i video.
+                        </video>
+                    </div>
+                }
+                else
+                {
+                    <div class="media-container">
+                        <img src="@Model.Post.MediaPath" alt="@Model.Post.Titolo" class="media-content">
+                    </div>
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="post-info-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="user-info">
+                            <h5 class="user-name">@(Model.Post.Utente?.Nome ?? "Utente") @(Model.Post.Utente?.Cognome ?? "")</h5>
+                            <span class="post-date">@Model.Post.DataCreazione.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                        <div class="like-container">
+                            <button class="like-button" data-post-id="@Model.Post.PostID">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <span class="like-count" data-post-id="@Model.Post.PostID">@Model.Post.LikeCount</span>
+                        </div>
+                    </div>
+
+                    <h3 class="post-title mb-3">@Model.Post.Titolo</h3>
+                    <p class="description">@Model.Post.Descrizione</p>
+
+                    @if (!string.IsNullOrEmpty(Model.Post.MarcaModello))
+                    {
+                        <div class="watch-details mt-4">
+                            <h5 class="section-title">Orologio</h5>
+                            <p><i class="fas fa-watch"></i> @Model.Post.MarcaModello</p>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Post.Hashtags))
+                    {
+                        <div class="hashtags mt-4">
+                            <h5 class="section-title">Hashtag</h5>
+                            <p>@Model.Post.Hashtags</p>
+                        </div>
+                    }
+
+                    <div class="actions mt-4">
+                        <a href="/" class="btn btn-back">
+                            <i class="fas fa-arrow-left"></i> Torna alla Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <h4>Post non trovato</h4>
+            <p>Il post che stai cercando non esiste o è stato rimosso.</p>
+            <a href="/" class="btn btn-primary">Torna alla Home</a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .post-details-container {
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        /* Media Container */
+        .media-container {
+            margin-bottom: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .media-container:hover {
+                transform: scale(1.02);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            }
+
+        .media-content {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Post Info Card */
+        .post-info-card {
+            background: linear-gradient(135deg, #ffffff, #f6f6f6);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #444;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #555;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* User Info */
+        .user-info .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .user-info .post-date {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        /* Like Button */
+        .like-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #888;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+            .like-button:hover {
+                transform: scale(1.2);
+                color: #ff3b5c;
+            }
+
+            .like-button.liked {
+                color: #ff3b5c;
+            }
+
+        /* Back Button */
+        .btn-back {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .btn-back:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .post-details-container
+
+        {
+            padding: 20px;
+        }
+
+        .post-info-card {
+            padding: 20px;
+        }
+
+        }
+    </style>
+}
+
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sistema di gestione like
+            initLikeButton();
+
+            function initLikeButton() {
+                const button = document.querySelector('.like-button');
+                if (!button) return;
+
+                const postId = button.dataset.postId;
+                const likeCountElement = document.querySelector(`.like-count[data-post-id="${postId}"]`);
+
+                // Verifica lo stato del like
+                checkLikeStatus(postId, button, likeCountElement);
+
+                // Aggiungi evento click
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleLike(postId, button, likeCountElement);
+                });
+            }
+
+            // Verifica lo stato del like
+            function checkLikeStatus(postId, buttonElement, countElement) {
+                // Ottieni utente corrente
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) {
+                    console.log('Utente non autenticato');
+                    return;
+                }
+
+                fetch(`/api/Like/check?postId=${postId}&userEmail=${encodeURIComponent(userData.email)}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Errore nella risposta del server');
+                        return res.json();
+                    })
+                    .then(data => {
+                        updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+                    })
+                    .catch(err => {
+                        console.error('Errore durante la verifica del like:', err);
+                    });
+            }
+
+            // Toggle del like
+            function toggleLike(postId, buttonElement, countElement) {
+                // Ottieni utente corrente
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) {
+                    // Reindirizza al login se non autenticato
+                    window.location.href = '/APP/log/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                // Disabilita temporaneamente il pulsante
+                buttonElement.disabled = true;
+
+                fetch('/api/Like/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        postId: postId,
+                        userEmail: userData.email
+                    })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Errore nella risposta del server');
+                    return res.json();
+                })
+                .then(data => {
+                    updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+                })
+                .catch(err => {
+                    console.error('Errore durante il toggle del like:', err);
+                })
+                .finally(() => {
+                    // Riabilita il pulsante
+                    buttonElement.disabled = false;
+                });
+            }
+
+            // Aggiorna l'interfaccia utente del like
+            function updateLikeUI(buttonElement, countElement, isLiked, likeCount) {
+                // Aggiorna la classe e l'icona
+                if (isLiked) {
+                    buttonElement.classList.add('liked');
+                    buttonElement.querySelector('i').className = 'fas fa-heart';
+                } else {
+                    buttonElement.classList.remove('liked');
+                    buttonElement.querySelector('i').className = 'far fa-heart';
+                }
+
+                // Aggiorna il contatore
+                if (countElement) {
+                    countElement.textContent = likeCount;
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,1647 @@
+﻿@page
+@model WatchesTok.Pages.IndexModel
+@{
+    ViewData["Title"] = "WatchesTok - La community degli appassionati di orologi";
+}
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="display-3 fw-bold text-white mb-4 animated-title">WatchesTok</h1>
+        <p class="lead text-white mb-5 fade-in-up">La community per gli appassionati di alta orologeria</p>
+        <div class="button-container">
+            <a href="/APP/Homepage/Homepage" class="btn btn-lg btn-outline-light px-4 me-3 hero-btn pulse-btn">Esplora</a>
+            <!-- Pulsanti che verranno mostrati/nascosti da JavaScript -->
+            <a href="/APP/Authentication/login" id="loginButton" class="btn btn-lg btn-primary px-4 hero-btn glow-btn">Accedi</a>
+            <a href="/APP/Account/Account" id="profileButton" class="btn btn-lg btn-primary px-4 hero-btn glow-btn" style="display: none;">Il Mio Profilo</a>
+        </div>
+    </div>
+    <video autoplay muted loop poster="/images/watch-poster.jpg" class="hero-video">
+        <source src="https://edocorti.altervista.org/img/mixkit-mechanism-of-a-working-clock-3651-hd-ready.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="scroll-indicator">
+        <div class="mouse">
+            <div class="wheel"></div>
+        </div>
+        <div class="arrow">
+            <span></span>
+        </div>
+    </div>
+</div>
+
+<!-- Sezione Brand di Orologi -->
+<div class="container-fluid brand-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 section-title reveal-title">Esplora per Brand</h2>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <!-- Rolex Card -->
+            <div class="col reveal-card">
+                <div class="brand-card" data-brand="rolex">
+                    <div class="brand-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Logo_da_Rolex.png" alt="Rolex">
+                    </div>
+                    <div class="brand-info">
+                        <h3>Rolex</h3>
+                        <p>Simbolo di prestigio e precisione, espressione di eleganza e innovazione dal 1905.</p>
+                        <div class="brand-models">Submariner, Daytona, GMT-Master</div>
+                        <div class="discover-more">
+                            <span>Scopri di più</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="brand-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Patek Philippe Card -->
+            <div class="col reveal-card" data-delay="100">
+                <div class="brand-card" data-brand="patek">
+                    <div class="brand-logo">
+                        <img src="https://cdn.worldvectorlogo.com/logos/patek-philippe-sa-1.svg" alt="Patek Philippe">
+                    </div>
+                    <div class="brand-info">
+                        <h3>Patek Philippe</h3>
+                        <p>La tradizione dell'eccellenza continua da generazione in generazione dal 1839.</p>
+                        <div class="brand-models">Nautilus, Calatrava, Aquanaut</div>
+                        <div class="discover-more">
+                            <span>Scopri di più</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="brand-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Audemars Piguet Card -->
+            <div class="col reveal-card" data-delay="200">
+                <div class="brand-card" data-brand="ap">
+                    <div class="brand-logo">
+                        <img src="https://1000logos.net/wp-content/uploads/2018/10/Audemars-Piguet-Logo.png" alt="Audemars Piguet">
+                    </div>
+                    <div class="brand-info">
+                        <h3>Audemars Piguet</h3>
+                        <p>Maestria artigianale senza compromessi e design audace dal 1875.</p>
+                        <div class="brand-models">Royal Oak, Royal Oak Offshore, Code 11.59</div>
+                        <div class="discover-more">
+                            <span>Scopri di più</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="brand-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Omega Card -->
+            <div class="col reveal-card" data-delay="100">
+                <div class="brand-card" data-brand="omega">
+                    <div class="brand-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/2560px-Omega_Logo.svg.png" alt="Omega">
+                    </div>
+                    <div class="brand-info">
+                        <h3>Omega</h3>
+                        <p>Pioniere nell'esplorazione spaziale e delle profondità marine dal 1848.</p>
+                        <div class="brand-models">Speedmaster, Seamaster, Constellation</div>
+                        <div class="discover-more">
+                            <span>Scopri di più</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="brand-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Cartier Card -->
+            <div class="col reveal-card" data-delay="200">
+                <div class="brand-card" data-brand="cartier">
+                    <div class="brand-logo">
+                        <img src="https://logos-world.net/wp-content/uploads/2020/06/Cartier-Logo.png" alt="Cartier">
+                    </div>
+                    <div class="brand-info">
+                        <h3>Cartier</h3>
+                        <p>L'arte dell'orologeria si unisce alla maestria gioielliera dal 1847.</p>
+                        <div class="brand-models">Tank, Santos, Ballon Bleu</div>
+                        <div class="discover-more">
+                            <span>Scopri di più</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="brand-overlay"></div>
+                </div>
+            </div>
+
+            <!-- IWC Card -->
+            <div class="col reveal-card" data-delay="300">
+                <div class="brand-card" data-brand="iwc">
+                    <div class="brand-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/International_Watch_Company_logo.svg/2560px-International_Watch_Company_logo.svg.png" alt="IWC">
+                    </div>
+                    <div class="brand-info">
+                        <h3>IWC Schaffhausen</h3>
+                        <p>Ingegneria svizzera e precisione tedesca in perfetta armonia dal 1868.</p>
+                        <div class="brand-models">Portugieser, Pilot's Watch, Portofino</div>
+                        <div class="discover-more">
+                            <span>Scopri di più</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="brand-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sezione Trending con Carousel -->
+<div class="trending-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 section-title reveal-title">Trending Now</h2>
+        
+        <div class="carousel-container">
+            <div class="carousel-control prev">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            
+            <div class="watch-carousel">
+                <div class="trending-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="https://benetti.store/rolex/images/virtuemart/product/m126500ln-0001_drp-upright-bba-with-shadow-1718896324.png" alt="Rolex GMT">
+                            <div class="trending-info">
+                                <h4>Rolex Daytona</h4>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h4>Rolex Daytona</h4>
+                                <p>Icona tra i velocisti, perfetto per contare il tempo quando si corre.</p>
+                                <a href="#" class="btn btn-sm btn-outline-light mt-3">Dettagli</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trending-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="https://content.rolex.com/v7/dam/2023/upright-bba-with-shadow/m126900-0001.png" alt="Rolex Explorer">
+                            <div class="trending-info">
+                                <h4>Rolex Explorer</h4>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h4>Rolex Explorer</h4>
+                                <p>Nato per l'avventura, è l'essenza della robustezza e affidabilità.</p>
+                                <a href="#" class="btn btn-sm btn-outline-light mt-3">Dettagli</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trending-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="https://www.investmentwatches.com/cdn/shop/files/5990_87a88e12-f218-4b7d-930c-72abd612e2f4.png?v=1710256327" alt="Patek Nautilus">
+                            <div class="trending-info">
+                                <h4>Patek Philippe Nautilus</h4>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h4>Patek Philippe Nautilus</h4>
+                                <p>Un'icona di lusso sportivo disegnata dal leggendario Gérald Genta.</p>
+                                <a href="#" class="btn btn-sm btn-outline-light mt-3">Dettagli</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trending-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="https://www.investmentwatches.com/cdn/shop/files/16202ST.png?v=1724266523" alt="AP Royal Oak">
+                            <div class="trending-info">
+                                <h4>Audemars Piguet Royal Oak</h4>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h4>Audemars Piguet Royal Oak</h4>
+                                <p>Il rivoluzionario orologio in acciaio che ha ridefinito il lusso negli anni '70.</p>
+                                <a href="#" class="btn btn-sm btn-outline-light mt-3">Dettagli</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trending-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="https://www.omegawatches.com/media/catalog/product/o/m/omega-speedmaster-moonwatch-professional-co-axial-master-chronometer-chronograph-42-mm-31030425001001-3ccf4a.png?w=420" alt="Omega Seamaster">
+                            <div class="trending-info">
+                                <h4>Omega Speedmaster</h4>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h4>Omega Speedmaster</h4>
+                                <p>Il primo orologio sulla Luna, testimone di momenti storici dell'umanità.</p>
+                                <a href="#" class="btn btn-sm btn-outline-light mt-3">Dettagli</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trending-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="https://www.iwc.com/content/dam/rcq/iwc/20/15/88/5/2015885.png.transform.global_image_540_2x.png" alt="IWC Portugieser">
+                            <div class="trending-info">
+                                <h4>IWC Portugieser</h4>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h4>IWC Portugieser</h4>
+                                <p>Eleganza intramontabile e precisione svizzera in un design senza tempo.</p>
+                                <a href="#" class="btn btn-sm btn-outline-light mt-3">Dettagli</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+               
+            </div>
+            
+            <div class="carousel-control next">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <div class="carousel-indicators">
+            <span class="indicator active"></span>
+            <span class="indicator"></span>
+            <span class="indicator"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Tick Tock Sound Section -->
+<div class="sound-section">
+    <div class="sound-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 tick-tock-content reveal-left">
+                    <h2 class="mb-4">L'orologeria è Arte</h2>
+                    <p class="lead mb-4">Ogni ticchettio racconta una storia di precisione, passione e perfezione. Un'eredità di eccellenza che continua a scandire il nostro tempo.</p>
+                    <div class="sound-controls">
+                        <button id="playTickTock" class="btn btn-outline-dark">
+                            <i class="fas fa-play"></i> Ascolta il suono dell'eccellenza
+                        </button>
+                    </div>
+                    <!-- Audio nascosto -->
+                    <audio id="tickTockSound" src="https://edocorti.altervista.org/img/ticktock.mp3"></audio>
+                </div>
+                <div class="col-md-6 text-center reveal-right">
+                    <div class="ticking-watch">
+                        <img src="https://edocorti.altervista.org/img/rainbow.png" alt="Orologio Meccanico" class="img-fluid">
+                        <div class="ticking-animation"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script per riprodurre il suono -->
+    <script>
+    const playButton = document.getElementById("playTickTock");
+    const audio = document.getElementById("tickTockSound");
+    
+    let isPlaying = false;
+
+    playButton.addEventListener("click", function () {
+        if (isPlaying) {
+            audio.pause();
+            audio.currentTime = 0; // Torna all'inizio
+            playButton.innerHTML = `<i class="fas fa-play"></i> Ascolta il suono dell'eccellenza`;
+        } else {
+            audio.currentTime = 0; // Assicura che parta da capo
+            audio.play();
+            playButton.innerHTML = `<i class="fas fa-stop"></i> Ferma il suono`;
+        }
+        isPlaying = !isPlaying;
+    });
+</script>
+
+
+
+
+<!-- Call to Action Section - Full Width como nell'immagine -->
+    <div class="cta-section parallax-section" style="background-image: url('https://edocorti.altervista.org/img/footer.jpg'); background-position: center center;">
+    <div class="cta-overlay"></div>
+    <div class="container-fluid position-relative">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-8 col-lg-9 reveal-left text-center text-md-start">
+                <h2 class="mb-3">Unisciti alla community</h2>
+                <p class="lead mb-md-0 mb-4">Condividi la tua passione, scopri pezzi unici e connettiti con altri appassionati</p>
+                <div class="members-counter mt-3">
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="@Model.NumeroUtenti">0</span>
+                        <span class="counter-label">Membri</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="@Model.NumeroPost">0</span>
+                        <span class="counter-label">Post</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3 text-md-end text-center reveal-right">
+                <a href="/APP/Authentication/login" class="btn btn-primary btn-lg px-4 wobble-btn">Inizia ora</a>
+                <div class="join-today">Unisciti oggi!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Import Font Awesome (assicurati di includere il link nel head del documento) */
+        @@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
+        
+        /* Import Google Fonts */
+        @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        /* Stili generali */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #0dcaf0;
+            --accent-color: #ff4081;
+            --dark-color: #212529;
+            --light-color: #f8f9fa;
+        }
+
+        .section-title {
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        /* Modifica per ridurre i margini laterali */
+        .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            width: 95%;
+            max-width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Hero Section Enhancements */
+        .hero-section {
+            position: relative;
+            width: 99.5vw;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            height: 85vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 0;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin-left: 10px;
+            margin-right: -10px;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8));
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Floating watches animation */
+        .floating-watch {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.6;
+            width: 150px;
+            height: 150px;
+        }
+
+        .floating-watch img {
+            width: 100%;
+            height: auto;
+        }
+
+        .floating-watch.left {
+            left: 10%;
+            animation: floatLeft 6s ease-in-out infinite;
+        }
+
+        .floating-watch.right {
+            right: 10%;
+            animation: floatRight 8s ease-in-out infinite;
+        }
+
+        @@keyframes floatLeft {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @@keyframes floatRight {
+            0%, 100% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(0) rotate(-5deg); }
+        }
+
+        /* Hero buttons with animation */
+        .hero-btn {
+            font-weight: 500;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .pulse-btn {
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .glow-btn {
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .glow-btn:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.2);
+            transform: rotate(30deg);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .glow-btn:hover:after {
+            transform: rotate(30deg) translate(80%, -10%);
+        }
+
+        /* Animated Title */
+        .animated-title {
+            animation: glow 2s ease-in-out infinite alternate;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
+        }
+
+        @@keyframes glow {
+            from { text-shadow: 0 0 5px rgba(13, 110, 253, 0.3); }
+            to { text-shadow: 0 0 15px rgba(13, 110, 253, 0.8); }
+        }
+
+        /* Fade in up animation */
+        .fade-in-up {
+            animation: fadeInUp 1s ease forwards;
+            opacity: 0;
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Down Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: fadeInDown 1.5s ease-in-out 1s forwards;
+            opacity: 0;
+        }
+
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .mouse {
+            width: 26px;
+            height: 40px;
+            border: 2px solid white;
+            border-radius: 20px;
+            position: relative;
+            margin: 0 auto 10px;
+        }
+
+        .wheel {
+            height: 6px;
+            width: 2px;
+            background-color: white;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scroll 1.5s infinite;
+            opacity: 0.75;
+        }
+
+        @@keyframes scroll {
+            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            80% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+            100% { transform: translateX(-50%) translateY(0); opacity: 0; }
+        }
+
+        .arrow span {
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-bottom: 2px solid white;
+            border-right: 2px solid white;
+            transform: rotate(45deg);
+            margin: 0 auto;
+            animation: arrow 1.5s infinite;
+        }
+
+        @@keyframes arrow {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Reveal Animations for Content */
+        .reveal-title {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .reveal-title.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Brand Cards Enhancement */
+        .brand-section {
+            background-color: #ffffff;
+            padding: 80px 0;
+        }
+
+        .brand-card {
+            position: relative;
+            height: 280px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .brand-card[data-brand="rolex"] {
+                    background-image: url('https://c4.wallpaperflare.com/wallpaper/437/433/208/watch-luxury-watches-rolex-wallpaper-preview.jpg');
+            }
+
+            .brand-card[data-brand="patek"] {
+                    background-image: url('https://images.unsplash.com/photo-1626624386327-5204714bae9f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGF0ZWslMjBwaGlsaXBwZXxlbnwwfHwwfHx8MA%3D%3D');
+            }
+
+            .brand-card[data-brand="ap"] {
+                    background-image: url('https://c4.wallpaperflare.com/wallpaper/568/498/557/audemars-clock-piquet-time-wallpaper-preview.jpg');
+            }
+
+            .brand-card[data-brand="omega"] {
+                    background-image: url('https://img.goodfon.com/original/2857x2000/1/fb/chasy-omega-speedmaster-4702.jpg');
+            }
+
+            .brand-card[data-brand="cartier"] {
+                    background-image: url('https://www.benarijewelers.com/public/1.0/uploads/source/static-pages/history-of-the-santos-de-cartier/image3.jpg');
+            }
+
+            .brand-card[data-brand="iwc"] {
+                    background-image: url('https://img.goodfon.com/wallpaper/big/6/28/iwc-pilot-s-kabina-chasy-watch.webp');
+            }
+
+            .brand-card:hover {
+                transform: translateY(-15px) scale(1.03);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            }
+
+            .brand-card:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.1);
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+
+            .brand-card:hover:before {
+                opacity: 1;
+            }
+
+        .brand-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.85));
+            z-index: 1;
+        }
+
+        .brand-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            max-width: 100px;
+            max-height: 60px;
+            z-index: 2;
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .brand-card:hover .brand-logo {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .brand-logo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .brand-info {
+            position: relative;
+            padding: 20px;
+            color: white;
+            z-index: 2;
+            transform: translateY(5px);
+            transition: all 0.3s ease;
+        }
+
+        .brand-card:hover .brand-info {
+            transform: translateY(0);
+        }
+
+        .brand-info h3 {
+            font-weight: 700;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .brand-card:hover .brand-info h3 {
+            transform: translateY(-2px);
+        }
+
+        .brand-info p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .brand-models {
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+            transition: all 0.3s ease;
+        }
+
+        .discover-more {
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+            .discover-more span {
+                margin-right: 5px;
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+            .discover-more i {
+                font-size: 12px;
+                transition: transform 0.3s ease;
+            }
+
+        .brand-card:hover .discover-more {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+            .brand-card:hover .discover-more i {
+                animation: arrowRight 1s infinite;
+            }
+
+        @@keyframes arrowRight {
+            0%, 100%
+
+        {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(3px);
+        }
+
+        }
+
+        /* Trending Section with Carousel */
+        .trending-section {
+            background-color: #f8f9fa;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .trending-section:before {
+                content: '';
+                position: absolute;
+                width: 400px;
+                height: 400px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(13, 110, 253, 0.05) 0%, rgba(13, 110, 253, 0) 70%);
+                top: -200px;
+                left: -200px;
+                z-index: 0;
+            }
+
+            .trending-section:after {
+                content: '';
+                position: absolute;
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(13, 110, 253, 0.05) 0%, rgba(13, 110, 253, 0) 70%);
+                bottom: -150px;
+                right: -150px;
+                z-index: 0;
+            }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 0 40px;
+        }
+
+        .watch-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+            .watch-carousel::-webkit-scrollbar {
+                display: none; /* Chrome, Safari and Opera */
+            }
+
+        .trending-card {
+            flex: 0 0 auto;
+            width: 260px;
+            height: 340px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .trending-card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .card-front {
+            background-color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-front img {
+            width: 100%;
+            height: 240px;
+            object-fit: contain;
+            background-color: #f8f9fa;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .trending-card:hover .card-front img {
+            transform: scale(1.05);
+        }
+
+        .card-front .trending-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+            .card-front .trending-info h4 {
+                font-size: 16px;
+                font-weight: 600;
+                margin-bottom: 0;
+            }
+
+        .back-content {
+            text-align: center;
+        }
+
+            .back-content h4 {
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+
+            .back-content p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+        .trending-stats {
+            display: flex;
+            justify-content: space-around;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+            .trending-stats span {
+                display: flex;
+                align-items: center;
+            }
+
+                .trending-stats span i {
+                    margin-right: 5px;
+                }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+            .carousel-control:hover {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            .carousel-control.prev {
+                left: 0;
+            }
+
+            .carousel-control.next {
+                right: 0;
+            }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #dee2e6;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .indicator.active {
+                background-color: var(--primary-color);
+                width: 20px;
+                border-radius: 5px;
+            }
+
+        /* Sound Section */
+        .sound-section {
+            background-color: white;
+            padding: 10px 0;
+            padding-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tick-tock-content {
+            padding-right: 30px;
+        }
+
+        .sound-controls {
+            margin-top: 30px;
+        }
+
+            .sound-controls .btn {
+                border-radius: 30px;
+                padding: 10px 20px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+                .sound-controls .btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+                }
+
+                .sound-controls .btn i {
+                    margin-right: 5px;
+                }
+
+        .ticking-watch {
+            position: relative;
+            display: inline-block;
+        }
+
+            .ticking-watch img {
+                max-width: 80%;
+                animation: subtle-rotate 20s linear infinite;
+                background-color: transparent !important;
+            }
+
+        @@keyframes subtle-rotate {
+            0%
+
+        {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        .ticking-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            opacity: 0;
+            animation: pulse-tick 1s infinite;
+        }
+
+        @@keyframes pulse-tick {
+            0%
+
+        {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.7;
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(3);
+            opacity: 0;
+        }
+
+        }
+
+        /* CTA Section Enhancement */
+        .cta-section {
+            color: white;
+            padding: 80px 0;
+            width: 100%;
+            margin: 0;
+            border-radius: 0;
+            position: relative;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .cta-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(13,110,253,0.7));
+            z-index: 0;
+        }
+
+        .cta-section h2 {
+            font-weight: 700;
+            position: relative;
+        }
+
+            .cta-section h2:after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background-color: white;
+            }
+
+        .cta-section .btn {
+            border-radius: 30px;
+            font-weight: 600;
+            padding: 12px 30px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+            .cta-section .btn:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: rgba(255,255,255,0.2);
+                transition: all 0.3s ease;
+                z-index: -1;
+            }
+
+            .cta-section .btn:hover:after {
+                left: 100%;
+            }
+
+        .wobble-btn {
+            animation: wobble 10s ease-in-out infinite;
+        }
+
+        @@keyframes wobble {
+            0%, 100%
+
+        {
+            transform: translateX(0);
+        }
+
+        85% {
+            transform: translateX(0);
+        }
+
+        90% {
+            transform: translateX(-5px);
+        }
+
+        95% {
+            transform: translateX(5px);
+        }
+
+        97.5% {
+            transform: translateX(-2px);
+        }
+
+        99% {
+            transform: translateX(2px);
+        }
+
+        }
+
+        .join-today {
+            position: relative;
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse-text 2s infinite;
+        }
+
+        @@keyframes pulse-text {
+            0%
+
+        {
+            opacity: 0.7;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0.7;
+        }
+
+        }
+
+        .members-counter {
+            display: flex;
+            gap: 20px;
+        }
+
+        .counter-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .counter-number {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .counter-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Parallax Effect */
+        .parallax-section {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Media Queries */
+        @@media (max-width: 992px) {
+            .hero-section
+
+        {
+            height: 75vh;
+        }
+
+        .floating-watch {
+            display: none;
+        }
+
+        .members-counter {
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+
+        .counter-item {
+            flex: 0 0 45%;
+        }
+
+        }
+
+            @@media (max-width: 768px) {
+                /* Riorganizza il layout per dispositivi mobili */
+                .sound-section .row
+
+            {
+                flex-direction: column-reverse;
+            }
+
+            /* Sistema il contenuto testuale */
+            .tick-tock-content {
+                padding-right: 0;
+                margin-top: 30px; /* Spazio dopo l'immagine */
+                text-align: center;
+                z-index: 2; /* Assicura che il testo sia sopra */
+                position: relative;
+            }
+
+            /* Sistema l'immagine dell'orologio */
+            .ticking-watch {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+                .ticking-watch img {
+                    max-width: 60%; /* Riduci dimensione su mobile */
+                    background-color: transparent; /* Rendi lo sfondo trasparente */
+                }
+
+            }
+
+
+        @@media (max-width: 576px) {
+            .hero-section
+
+        {
+            height: 60vh;
+        }
+
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+
+        .trending-card {
+            width: 180px;
+            height: 280px;
+        }
+
+        .card-front img {
+            height: 180px;
+        }
+
+        .card-front .trending-info h4 {
+            font-size: 14px;
+        }
+
+        .back-content h4 {
+            font-size: 16px;
+        }
+
+        .back-content p {
+            font-size: 12px;
+        }
+
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== Verifica autenticazione tramite localStorage =====
+            const checkAuthentication = () => {
+                const userData = localStorage.getItem('userData');
+                const utente = localStorage.getItem('utente');
+
+                const loginButton = document.getElementById('loginButton');
+                const profileButton = document.getElementById('profileButton');
+
+                if (userData || utente) {
+                    // Utente autenticato
+                    if (loginButton) loginButton.style.display = 'none';
+                    if (profileButton) profileButton.style.display = 'inline-block';
+                } else {
+                    // Utente non autenticato
+                    if (loginButton) loginButton.style.display = 'inline-block';
+                    if (profileButton) profileButton.style.display = 'none';
+                }
+            };
+
+            // Controlla autenticazione all'avvio
+            checkAuthentication();
+
+            // Controlla anche se lo stato di autenticazione cambia
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'userData' || e.key === 'utente') {
+                    checkAuthentication();
+                }
+            });
+
+            // ===== Caricamento dell'Audio =====
+            const audioTickTock = new Audio('/media/clock-ticking.mp3'); // Assicurati di avere questo file
+            audioTickTock.loop = true;
+            audioTickTock.volume = 0.5;
+
+            const playButton = document.getElementById('playTickTock');
+            if (playButton) {
+                playButton.addEventListener('click', function() {
+                    if (audioTickTock.paused) {
+                        audioTickTock.play();
+                        this.innerHTML = '<i class="fas fa-pause"></i> Pausa';
+                    } else {
+                        audioTickTock.pause();
+                        this.innerHTML = '<i class="fas fa-play"></i> Ascolta il suono dell\'eccellenza';
+                    }
+                });
+            }
+
+            // ===== Carousel Navigation =====
+            const carousel = document.querySelector('.watch-carousel');
+            const prevButton = document.querySelector('.carousel-control.prev');
+            const nextButton = document.querySelector('.carousel-control.next');
+            const indicators = document.querySelectorAll('.indicator');
+
+            if (carousel && prevButton && nextButton) {
+                let scrollAmount = 0;
+                const cardWidth = 260 + 20; // Card width + gap
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+                // Click events for navigation buttons
+                prevButton.addEventListener('click', function() {
+                    scrollAmount -= cardWidth * 2;
+                    if (scrollAmount < 0) scrollAmount = 0;
+                    carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    updateIndicators();
+                });
+
+                nextButton.addEventListener('click', function() {
+                    scrollAmount += cardWidth * 2;
+                    if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                    carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    updateIndicators();
+                });
+
+                // Update indicators based on scroll position
+                function updateIndicators() {
+                    const scrollPercentage = scrollAmount / maxScroll;
+                    indicators.forEach((indicator, index) => {
+                        if (scrollPercentage >= index / (indicators.length - 1) - 0.1 &&
+                            scrollPercentage <= (index + 1) / (indicators.length - 1) + 0.1) {
+                            indicator.classList.add('active');
+                        } else {
+                            indicator.classList.remove('active');
+                        }
+                    });
+                }
+
+                // Click event for indicators
+                indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', function() {
+                        scrollAmount = (maxScroll * index) / (indicators.length - 1);
+                        carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                        indicators.forEach(ind => ind.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+
+                // Scroll event to update indicators
+                carousel.addEventListener('scroll', function() {
+                    scrollAmount = carousel.scrollLeft;
+                    updateIndicators();
+                });
+            }
+
+            // ===== Reveal animations on scroll =====
+            const revealElements = document.querySelectorAll('.reveal-title, .reveal-card, .reveal-left, .reveal-right');
+
+            function revealOnScroll() {
+                for (let i = 0; i < revealElements.length; i++) {
+                    const windowHeight = window.innerHeight;
+                    const elementTop = revealElements[i].getBoundingClientRect().top;
+                    const elementVisible = 150;
+
+                    // Add delay for card elements if they have a delay attribute
+                    const delay = revealElements[i].getAttribute('data-delay');
+
+                    if (elementTop < windowHeight - elementVisible) {
+                        if (delay) {
+                            setTimeout(() => {
+                                revealElements[i].classList.add("active");
+                            }, delay);
+                        } else {
+                            revealElements[i].classList.add("active");
+                        }
+                    }
+                }
+            }
+
+            window.addEventListener("scroll", revealOnScroll);
+
+            // Call reveal function on page load
+            revealOnScroll();
+
+            // ===== Counter Animation =====
+            const counters = document.querySelectorAll('.counter-number');
+            let counted = false;
+
+            function startCounters() {
+                if (counted) return;
+
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-count');
+                    let count = 0;
+                    const duration = 2000; // ms
+                    const increment = target / (duration / 16); // 16ms is roughly 60fps
+
+                    const updateCounter = () => {
+                        count += increment;
+
+                        if (count < target) {
+                            counter.innerText = Math.floor(count).toLocaleString();
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target.toLocaleString();
+                        }
+                    };
+
+                    updateCounter();
+                });
+
+                counted = true;
+            }
+
+            // Start counters when they come into view
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startCounters();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            if (counters.length > 0) {
+                counterObserver.observe(document.querySelector('.members-counter'));
+            }
+
+            // ===== Brand Cards Click Events =====
+            const brandCards = document.querySelectorAll('.brand-card');
+
+                        const brandWebsites = {
+                'rolex': 'https://www.rolex.com',
+                'patek': 'https://www.patek.com',
+                'ap': 'https://www.audemarspiguet.com',
+                'omega': 'https://www.omegawatches.com',
+                'cartier': 'https://www.cartier.com',
+                'iwc': 'https://www.iwc.com'
+            };
+
+                        brandCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const brand = this.getAttribute('data-brand');
+                    // Aggiungi un effetto di ripple al click
+                    const ripple = document.createElement('div');
+                    ripple.className = 'ripple-effect';
+                    this.appendChild(ripple);
+
+                    // Ottieni l'URL del sito ufficiale del brand
+                    const brandUrl = brandWebsites[brand] || `/Homepage?marca=${brand}`;
+
+                    setTimeout(() => {
+                        ripple.remove();
+                        // Apri il sito ufficiale in una nuova scheda
+                        window.open(brandUrl, '_blank');
+                    }, 300);
+                });
+            });
+
+            // ===== Parallax Effect =====
+            const parallaxSection = document.querySelector('.parallax-section');
+
+            if (parallaxSection) {
+                window.addEventListener('scroll', function() {
+                    const scrollY = window.pageYOffset;
+                    const sectionTop = parallaxSection.offsetTop;
+                    const distance = scrollY - sectionTop;
+
+                    // Apply parallax only when section is in view
+                    if (scrollY > sectionTop - window.innerHeight && scrollY < sectionTop + parallaxSection.offsetHeight) {
+                        parallaxSection.style.backgroundPositionY = `calc(50% + ${distance * 0.5}px)`;
+                    }
+                });
+            }
+
+            // ===== Initial animations for a wow effect =====
+            setTimeout(() => {
+                document.querySelector('.hero-content h1').classList.add('animated-title');
+                document.querySelector('.hero-content p').classList.add('fade-in-up');
+
+                const heroButtons = document.querySelectorAll('.hero-btn');
+                heroButtons.forEach((btn, index) => {
+                    setTimeout(() => {
+                        btn.style.opacity = '1';
+                        btn.style.transform = 'translateY(0)';
+                    }, 500 + (index * 200));
+                });
+            }, 300);
+        });
+    </script>
+}

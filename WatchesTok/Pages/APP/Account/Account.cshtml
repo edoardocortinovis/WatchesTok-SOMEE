@@ -1,0 +1,871 @@
+﻿@page
+@model WatchesTok.Pages.APP.Account.AccountModel
+@{
+    ViewData["Title"] = "Il Tuo Profilo";
+}
+
+<div class="container mt-4">
+    <!-- Header section -->
+    <h1 class="text-center text-primary fw-bold">Il Tuo Profilo</h1>
+    <p class="text-center text-muted mb-4">Gestisci il tuo account e visualizza i tuoi contenuti</p>
+
+    <!-- Profile card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="bg-dark text-white rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-person-fill" style="font-size: 48px;"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h3 class="mb-0" id="displayNome"></h3>
+                        <p class="text-muted" id="displayEmail"></p>
+                    </div>
+                </div>
+
+                <a href="/APP/Account/AccountEdit" class="btn btn-outline-primary">
+                    <i class="fas fa-edit me-1"></i>Modifica
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs navigation -->
+    <ul class="nav nav-tabs mb-4 justify-content-center" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active d-flex align-items-center" id="my-posts-tab" data-bs-toggle="tab" data-bs-target="#my-posts" type="button" role="tab" aria-controls="my-posts" aria-selected="true">
+                <i class="fas fa-photo-video me-2"></i> I Miei Post
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link d-flex align-items-center" id="liked-posts-tab" data-bs-toggle="tab" data-bs-target="#liked-posts" type="button" role="tab" aria-controls="liked-posts" aria-selected="false">
+                <i class="fas fa-heart me-2"></i> Post che mi piacciono
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab content -->
+    <div class="tab-content" id="profileTabsContent">
+        <!-- My Posts Tab -->
+        <div class="tab-pane fade show active" id="my-posts" role="tabpanel" aria-labelledby="my-posts-tab">
+            <div id="my-posts-container" class="row g-4">
+                <div class="text-center w-100 py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Caricamento...</span>
+                    </div>
+                    <p class="mt-2">Caricamento post...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liked Posts Tab -->
+        <div class="tab-pane fade" id="liked-posts" role="tabpanel" aria-labelledby="liked-posts-tab">
+            <div id="liked-posts-container" class="row g-4">
+                <div class="text-center w-100 py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Caricamento...</span>
+                    </div>
+                    <p class="mt-2">Caricamento post...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Empty state template for posts -->
+<template id="empty-posts-template">
+    <div class="text-center py-5 w-100">
+        <div class="mb-4">
+            <img src="/images/no-posts.svg" alt="Nessun post" style="width: 120px; opacity: 0.4;" onerror="this.src='/images/camera.png'; this.onerror=null;">
+        </div>
+        <h4>Non hai ancora pubblicato nulla</h4>
+        <p class="text-muted">Inizia a condividere i tuoi orologi preferiti!</p>
+        <a href="/APP/CreatePost/CreatePost" class="btn btn-primary mt-2">
+            <i class="fas fa-plus me-2"></i>Crea Post
+        </a>
+    </div>
+</template>
+
+<!-- Empty state template for likes -->
+<template id="empty-likes-template">
+    <div class="text-center py-5 w-100">
+        <div class="mb-4">
+            <img src="/images/no-likes.svg" alt="Nessun like" style="width: 120px; opacity: 0.4;" onerror="this.src='/images/heart.png'; this.onerror=null;">
+        </div>
+        <h4>Non hai ancora messo like a nessun post</h4>
+        <p class="text-muted">Esplora e scopri contenuti interessanti!</p>
+        <a href="/APP/Homepage/Homepage" class="btn btn-primary mt-2">
+            <i class="fas fa-compass me-2"></i>Esplora
+        </a>
+    </div>
+</template>
+
+<style>
+    /* Card for profile */
+    .card {
+        border-radius: 15px;
+        border: none;
+    }
+
+    /* Tab styling */
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        font-weight: 500;
+        border: none;
+        padding: 0.75rem 1.5rem;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            border-bottom: 3px solid #0d6efd;
+        }
+
+    /* Post cards */
+    .post-card {
+        transition: transform 0.2s;
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        font-size: 0.9rem;
+    }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-img-container {
+        position: relative;
+        overflow: hidden;
+        max-height: 180px;
+    }
+
+        .card-img-container img,
+        .card-img-container video {
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            width: 100%;
+        }
+
+    .post-card .card-body {
+        padding: 0.75rem;
+    }
+
+    .post-card .card-footer {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .post-card .card-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .post-card .card-text {
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+    }
+
+    /* Modifica responsive generale */
+    .row {
+        margin: 0 -0.5rem;
+    }
+
+    .col-md-4 {
+        padding: 0 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Like button styling */
+    .like-button {
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s, color 0.2s;
+        font-size: 1.1rem;
+    }
+
+        .like-button:hover {
+            transform: scale(1.2);
+            color: #e74c3c;
+        }
+
+        .like-button.liked {
+            color: #e74c3c;
+        }
+
+    .like-count {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-left: 4px;
+    }
+
+    @@keyframes heartPulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.3);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .like-button.liked i {
+        animation: heartPulse 0.5s;
+    }
+
+    .hashtags .badge {
+        margin-right: 4px;
+        margin-bottom: 4px;
+    }
+
+    .like-container {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+
+    
+
+    @@media (max-width: 615px) {
+        .card-body .d-flex.justify-content-between {
+            flex-direction: column;
+            align-items: center !important;
+        }
+
+        .card-body .d-flex.align-items-center {
+            text-align: center;
+        }
+
+        .card-body .btn-outline-primary {
+            margin-top: 1rem;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+        /* Assicuriamoci che i like nei post non siano influenzati */
+        .post-card .card-footer .d-flex {
+            flex-direction: row !important;
+        }
+
+        .card.shadow-sm:not(.post-card) .d-flex.justify-content-between {
+            flex-direction: column;
+            align-items: center !important;
+        }
+
+        .card.shadow-sm:not(.post-card) .d-flex.align-items-center {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .card.shadow-sm:not(.post-card) .btn-outline-primary {
+            margin-top: 1rem;
+        }
+    }
+
+    /* Add to your existing styles */
+    .delete-post-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+        .delete-post-btn:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+    /* Make sure the button is properly aligned */
+    .card-footer .d-flex {
+        align-items: center;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Global user data object
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data and initialize profile
+            loadUserProfile();
+
+            // Initialize tabs
+            const myPostsTab = document.getElementById('my-posts-tab');
+            const likedPostsTab = document.getElementById('liked-posts-tab');
+
+            if (myPostsTab) {
+                myPostsTab.addEventListener('shown.bs.tab', function() {
+                    if (!document.querySelector('#my-posts-container .post-card')) {
+                        loadUserPosts();
+                    }
+                });
+            }
+
+            if (likedPostsTab) {
+                likedPostsTab.addEventListener('shown.bs.tab', function() {
+                    if (!document.querySelector('#liked-posts-container .post-card')) {
+                        loadLikedPosts();
+                    }
+                });
+            }
+
+            // Initial loading of user posts - with a slight delay to ensure DOM is ready
+            setTimeout(() => loadUserPosts(), 100);
+        });
+
+        // Load user profile data from localStorage
+        function loadUserProfile() {
+            try {
+                const userDataStr = localStorage.getItem('utente');
+                console.log("Dati utente dal localStorage:", userDataStr);
+
+                if (!userDataStr) {
+                    window.location.href = '/APP/Authentication/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+
+                if (!userData || !userData.email) {
+                    window.location.href = '/APP/Authentication/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                currentUser = userData;
+
+                // Populate profile fields
+                const displayNomeEl = document.getElementById('displayNome');
+                const displayEmailEl = document.getElementById('displayEmail');
+
+                if (displayNomeEl) displayNomeEl.textContent = `${userData.nome || ''} ${userData.cognome || ''}`;
+                if (displayEmailEl) displayEmailEl.textContent = userData.email;
+
+                // Fetch and display user stats
+                fetchUserStats(userData.email);
+            } catch (error) {
+                console.error("Errore nel caricamento del profilo:", error);
+                alert("Errore nel caricamento dei dati utente. Effettua nuovamente il login.");
+                window.location.href = '/APP/Authentication/login';
+            }
+        }
+
+        // Fetch user statistics (post count and like count)
+        function fetchUserStats(email) {
+            if (!email) return;
+
+            fetch(`/api/userstats?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const postCountEl = document.getElementById('postCount');
+                        const likeCountEl = document.getElementById('likeCount');
+
+                        if (postCountEl) postCountEl.textContent = data.postCount || 0;
+                        if (likeCountEl) likeCountEl.textContent = data.likeCount || 0;
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nel caricamento delle statistiche:', error);
+                });
+        }
+
+        // Load user's posts - MODIFIED to use AccountPosts endpoint instead of API
+        async function loadUserPosts() {
+            if (!currentUser || !currentUser.email) return;
+
+            const container = document.getElementById('my-posts-container');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="text-center w-100 py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Caricamento...</span>
+                    </div>
+                    <p class="mt-2">Caricamento post...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/APP/Account/AccountPosts?tab=my-posts&email=${encodeURIComponent(currentUser.email)}`);
+                if (!response.ok) throw new Error('Errore nel caricamento dei post');
+
+                const htmlText = await response.text();
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlText;
+
+                const postsContainer = tempDiv.querySelector('#my-posts .row') || tempDiv.querySelector('.tab-pane#my-posts .row');
+
+                if (!postsContainer || !postsContainer.children.length || postsContainer.querySelector('.text-center.py-5')) {
+                    const emptyTemplate = document.getElementById('empty-posts-template');
+                    if (emptyTemplate) container.innerHTML = emptyTemplate.innerHTML;
+                    return;
+                }
+
+                let formattedHtml = '<div class="row g-4">';
+
+                const postElements = postsContainer.querySelectorAll('.col-md-4, .col-sm-6, .col');
+                postElements.forEach(postElement => {
+                    formattedHtml += `
+                    <div class="col-md-4 col-sm-6 mb-4">
+                        ${postElement.innerHTML}
+                    </div>`;
+                });
+
+                formattedHtml += '</div>';
+                container.innerHTML = formattedHtml;
+
+                initLikeButtons();
+
+            } catch (error) {
+                console.error('Errore:', error);
+                container.innerHTML = `
+                    <div class="alert alert-danger w-100">
+                        Errore durante il caricamento dei post: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+
+        async function loadLikedPosts() {
+            if (!currentUser || !currentUser.email) return;
+
+            const container = document.getElementById('liked-posts-container');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="text-center w-100 py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Caricamento...</span>
+                    </div>
+                    <p class="mt-2">Caricamento post...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/APP/Account/AccountPosts?tab=liked-posts&email=${encodeURIComponent(currentUser.email)}`);
+                if (!response.ok) throw new Error('Errore nel caricamento dei post');
+
+                const htmlText = await response.text();
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlText;
+
+                const postsContainer = tempDiv.querySelector('#liked-posts .row') || tempDiv.querySelector('.tab-pane#liked-posts .row');
+
+                if (!postsContainer || !postsContainer.children.length || postsContainer.querySelector('.text-center.py-5')) {
+                    const emptyTemplate = document.getElementById('empty-likes-template');
+                    if (emptyTemplate) container.innerHTML = emptyTemplate.innerHTML;
+                    return;
+                }
+
+                let formattedHtml = '<div class="row g-4">';
+
+                const postElements = postsContainer.querySelectorAll('.col-md-4, .col-sm-6, .col');
+                postElements.forEach(postElement => {
+                    formattedHtml += `
+                    <div class="col-md-4 col-sm-6 mb-4">
+                        ${postElement.innerHTML}
+                    </div>`;
+                });
+
+                formattedHtml += '</div>';
+                container.innerHTML = formattedHtml;
+
+                initLikeButtons();
+
+            } catch (error) {
+                console.error('Errore:', error);
+                container.innerHTML = `
+                    <div class="alert alert-danger w-100">
+                        Errore durante il caricamento dei post: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+
+        // Create HTML for post card
+        function createPostCardHtml(post, isMyPost) {
+            const likeCount = post.likeCount || 0;
+            const likeStatusClass = isMyPost ? '' : 'liked'; // In liked posts tab, all posts are liked
+            const likeIcon = isMyPost ? 'far fa-heart' : 'fas fa-heart'; // In liked posts tab, solid heart icon
+
+            return `
+                    <!-- Update this in the createPostCardHtml function or modify the server-side rendering -->
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div class="like-container">
+                <button class="like-button ${likeStatusClass}" data-post-id="${post.postID}">
+                    <i class="${likeIcon}"></i>
+                </button>
+                <span class="like-count" data-post-id="${post.postID}">${likeCount}</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <small class="text-muted me-2">
+                    ${isMyPost ? '' : `Like: ${formatDate(post.dataLike)}`}
+                </small>
+                ${isMyPost ? `
+                <button class="btn btn-sm btn-outline-danger delete-post-btn" data-post-id="${post.postID}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                ` : ''}
+            </div>
+        </div>
+            `;
+        }
+
+        // Replace your current initLikeButtons function with this improved version
+        function initLikeButtons() {
+            const buttons = document.querySelectorAll('.like-button');
+            if (!buttons || buttons.length === 0) return;
+
+            buttons.forEach(button => {
+                if (!button) return;
+
+                const postId = button.dataset.postId;
+                if (!postId) return;
+
+                // Remove any existing listener to prevent duplication
+                button.removeEventListener('click', handleLikeClick);
+
+                // Always fetch latest like status AND count for EVERY post
+                syncLikeDataFromServer(postId);
+
+                // Add new event listener
+                button.addEventListener('click', handleLikeClick);
+            });
+        }
+
+        // New function to synchronize like data with server
+        function syncLikeDataFromServer(postId) {
+            if (!currentUser || !currentUser.email) return;
+
+            const buttons = document.querySelectorAll(`.like-button[data-post-id="${postId}"]`);
+            const countElements = document.querySelectorAll(`.like-count[data-post-id="${postId}"]`);
+
+            if (buttons.length === 0 || countElements.length === 0) return;
+
+            // Get both like status and count at once
+            fetch(`/api/Like/check?postId=${postId}&userEmail=${encodeURIComponent(currentUser.email)}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Update all instances of this post's like UI
+                    buttons.forEach(button => {
+                        updateLikeUI(button, null, data.liked, data.likeCount);
+                    });
+
+                    countElements.forEach(element => {
+                        element.textContent = data.likeCount;
+                    });
+                })
+                .catch(err => {
+                    console.error('Errore durante la sincronizzazione dei like:', err);
+
+                    // Fallback - at least get the count if the check fails
+                    fetch(`/api/Like/count?postId=${postId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                countElements.forEach(element => {
+                                    element.textContent = data.count;
+                                });
+                            }
+                        })
+                        .catch(e => console.error('Fallback like count failed:', e));
+                });
+        }
+
+        // Update your toggleLike function to sync all instances after toggle
+        function toggleLike(postId, buttonElement, countElement) {
+            if (!currentUser || !currentUser.email) {
+                window.location.href = '/APP/Authentication/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                return;
+            }
+
+            // Disable button temporarily
+            if (buttonElement) buttonElement.disabled = true;
+
+            // Get current state
+            const wasLiked = buttonElement.classList.contains('liked');
+            const prevCount = countElement ? parseInt(countElement.textContent || '0') : 0;
+
+            // Optimistic UI update for quick feedback
+            updateLikeUI(buttonElement, countElement, !wasLiked, wasLiked ? prevCount - 1 : prevCount + 1);
+
+            fetch('/api/Like/toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    postId: postId,
+                    userEmail: currentUser.email
+                })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Errore nella risposta del server');
+                return res.json();
+            })
+            .then(data => {
+                // Sync ALL instances of this post's like UI across tabs
+                syncLikeDataFromServer(postId);
+
+                // Update user stats
+                fetchUserStats(currentUser.email);
+
+                // Handle removing post from liked tab if needed
+                const likedPostsTab = document.querySelector('#liked-posts.active, #liked-posts.show.active');
+                if (!data.liked && likedPostsTab && buttonElement && wasLiked) {
+                    const postCard = buttonElement.closest('.col-md-4, .col-sm-6, .col');
+                    if (postCard) {
+                        // Animation for removal
+                        postCard.style.transition = 'opacity 0.5s, transform 0.5s';
+                        postCard.style.opacity = '0';
+                        postCard.style.transform = 'scale(0.8)';
+
+                        // Remove after animation
+                        setTimeout(() => {
+                            postCard.remove();
+
+                            // Check if no posts remain
+                            const likedPostsContainer = document.getElementById('liked-posts-container');
+                            if (likedPostsContainer) {
+                                const remainingPosts = likedPostsContainer.querySelectorAll('.col-md-4, .col-sm-6, .col').length;
+                                if (remainingPosts === 0) {
+                                    const emptyTemplate = document.getElementById('empty-likes-template');
+                                    if (emptyTemplate) likedPostsContainer.innerHTML = emptyTemplate.innerHTML;
+                                }
+                            }
+                        }, 500);
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Errore durante il toggle del like:', err);
+                // Revert to previous state on error
+                updateLikeUI(buttonElement, countElement, wasLiked, prevCount);
+                alert('Si è verificato un errore durante l\'aggiornamento del like. Riprova più tardi.');
+            })
+            .finally(() => {
+                // Re-enable button
+                if (buttonElement) buttonElement.disabled = false;
+            });
+        }
+        // Funzione separata per gestire il click sul like
+        function handleLikeClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = this;
+            const postId = button.dataset.postId;
+            if (!postId) return;
+
+            const likeCountElement = document.querySelector(`.like-count[data-post-id="${postId}"]`);
+            toggleLike(postId, button, likeCountElement);
+        }
+
+        // Check if user has liked a post - versione migliorata
+        function checkLikeStatus(postId, buttonElement) {
+            if (!currentUser || !currentUser.email || !buttonElement) return;
+
+            // Trova l'elemento contatore corrispondente
+            const countElement = document.querySelector(`.like-count[data-post-id="${postId}"]`);
+
+            fetch(`/api/Like/check?postId=${postId}&userEmail=${encodeURIComponent(currentUser.email)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Errore nella risposta del server');
+                    return res.json();
+                })
+                .then(data => {
+                    updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+                })
+                .catch(err => {
+                    console.error('Errore durante la verifica del like:', err);
+                    // In caso di errore, verifichiamo se il pulsante ha già la classe 'liked'
+                    // per mantenere lo stato visivo corrente
+                    const isCurrentlyLiked = buttonElement.classList.contains('liked');
+                    const currentCount = countElement ? parseInt(countElement.textContent || '0') : 0;
+                    updateLikeUI(buttonElement, countElement, isCurrentlyLiked, currentCount);
+                });
+        }
+
+        // Update UI elements for like status - versione migliorata
+        function updateLikeUI(buttonElement, countElement, isLiked, likeCount) {
+            // Verifica che gli elementi esistano
+            if (!buttonElement) return;
+
+            // Aggiorna la classe e l'icona
+            if (isLiked) {
+                buttonElement.classList.add('liked');
+                const iconElement = buttonElement.querySelector('i');
+                if (iconElement) iconElement.className = 'fas fa-heart';
+            } else {
+                buttonElement.classList.remove('liked');
+                const iconElement = buttonElement.querySelector('i');
+                if (iconElement) iconElement.className = 'far fa-heart';
+            }
+
+            // Aggiorna il contatore
+            if (countElement) {
+                countElement.textContent = likeCount;
+            }
+        }
+
+
+        // Helper function for media display
+        function getMediaHtml(mediaPath) {
+            if (!mediaPath) return '';
+
+            const extension = mediaPath.split('.').pop().toLowerCase();
+            if (['mp4', 'mov'].includes(extension)) {
+                return `
+                    <video class="card-img-top" controls>
+                        <source src="${mediaPath}" type="video/${extension}">
+                        Il tuo browser non supporta i video.
+                    </video>
+                `;
+            } else {
+                return `<img src="${mediaPath}" class="card-img-top" alt="Immagine post">`;
+            }
+        }
+
+        // Format hashtags as badges
+        function formatHashtags(hashtags) {
+            if (!hashtags) return '';
+
+            return hashtags.split(' ')
+                .filter(tag => tag.startsWith('#'))
+                .map(tag => `<span class="badge bg-light text-dark">${tag}</span>`)
+                .join(' ');
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return '';
+
+            const date = new Date(dateString);
+            return date.toLocaleDateString('it-IT');
+        }
+
+        // Toast notification helper
+        function showToast(message) {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create toast element
+            const toastId = 'toast-' + Date.now();
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">WatchesTok</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">${message}</div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+
+            // Initialize and show toast
+            const toastElement = document.getElementById(toastId);
+            if (toastElement) {
+                const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
+                toast.show();
+
+                // Remove toast after it's hidden
+                toastElement.addEventListener('hidden.bs.toast', function() {
+                    toastElement.remove();
+                });
+            }
+        }
+
+                // Delete post functionality
+        function deletePost(postId) {
+            if (!currentUser || !currentUser.email) return;
+
+            // Show confirmation dialog
+            if (!confirm('Sei sicuro di voler eliminare questo post? Questa azione non può essere annullata.')) {
+                return;
+            }
+
+            // Find the post card element
+            const postCard = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+            if (!postCard) return;
+
+            // Add visual feedback during deletion
+            postCard.closest('.col-md-4').style.opacity = '0.5';
+
+            // Make API call to delete the post
+            fetch('/api/Post/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    postId: postId,
+                    userEmail: currentUser.email
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Errore nella risposta del server');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Animation for removal
+                    const postColumn = postCard.closest('.col-md-4');
+                    postColumn.style.transition = 'opacity 0.5s, transform 0.5s';
+                    postColumn.style.opacity = '0';
+                    postColumn.style.transform = 'scale(0.8)';
+
+                    // Remove after animation
+                    setTimeout(() => {
+                        postColumn.remove();
+
+                        // Check if no posts remain
+                        const myPostsContainer = document.getElementById('my-posts-container');
+                        if (myPostsContainer) {
+                            const remainingPosts = myPostsContainer.querySelectorAll('.col-md-4').length;
+                            if (remainingPosts === 0) {
+                                const emptyTemplate = document.getElementById('empty-posts-template');
+                                if (emptyTemplate) myPostsContainer.innerHTML = emptyTemplate.innerHTML;
+                            }
+                        }
+
+                        // Show success message
+                        showToast('Post eliminato con successo!');
+
+                        // Update user stats
+                        fetchUserStats(currentUser.email);
+                    }, 500);
+                } else {
+                    throw new Error(data.message || 'Errore durante l\'eliminazione del post');
+                }
+            })
+            .catch(error => {
+                console.error('Errore durante l\'eliminazione:', error);
+
+                // Restore opacity
+                postCard.closest('.col-md-4').style.opacity = '1';
+
+                // Show error
+                showToast(`Errore: ${error.message || 'Si è verificato un errore durante l\'eliminazione del post'}`);
+            });
+        }
+    </script>
+}

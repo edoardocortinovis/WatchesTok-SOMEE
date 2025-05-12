@@ -1,0 +1,140 @@
+﻿@page
+@model WatchesTok.Pages.APP.Posts.LikedPostsModel
+@{
+    ViewData["Title"] = "Post che mi piacciono";
+}
+
+<div class="container mt-4">
+    <h2 class="liked-posts-title">
+        <i class="fas fa-heart text-danger"></i> Post che mi piacciono
+    </h2>
+
+    <div id="liked-posts-container" class="row mt-4">
+        <div class="text-center w-100">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Caricamento...</span>
+            </div>
+            <p class="mt-2">Caricamento post...</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLikedPosts();
+        });
+
+        async function loadLikedPosts() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) {
+                    window.location.href = '/APP/log/login?returnUrl=/APP/Posts/LikedPosts';
+                    return;
+                }
+
+                const response = await fetch(`/api/Like/user?userEmail=${encodeURIComponent(userData.email)}`);
+                if (!response.ok) {
+                    throw new Error('Errore durante il caricamento dei post');
+                }
+
+                const likedPosts = await response.json();
+                displayLikedPosts(likedPosts);
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('liked-posts-container').innerHTML = `
+                    <div class="alert alert-danger w-100">
+                        Errore durante il caricamento dei post: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+                function displayLikedPosts(posts) {
+            const container = document.getElementById('liked-posts-container');
+
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="no-likes-message">
+                        <h4>Non hai ancora messo like a nessun post</h4>
+                        <p>Esplora i post e metti like a quelli che ti piacciono!</p>
+                        <a href="/APP/Home/GeminiFeed" class="btn btn-primary mt-3">
+                            <i class="fas fa-search"></i> Esplora post
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            posts.forEach(post => {
+                // Assicurati che likeCount esista, altrimenti usa un valore predefinito
+                const likeCount = post.likeCount || 0;
+
+                html += `
+                <div class="col-md-4 mb-4">
+                    <div class="card post-card h-100">
+                        <div class="card-img-container">
+                            ${getMediaHtml(post.mediaPath)}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${post.titolo}</h5>
+                            <p class="card-text">${post.descrizione || ''}</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    ${post.marcaModello ? `<strong>${post.marcaModello}</strong><br>` : ''}
+                                    Pubblicato da ${post.autore.nome} ${post.autore.cognome || ''}
+                                </small>
+                            </p>
+                            ${post.hashtags ? `<p class="card-text hashtags">${formatHashtags(post.hashtags)}</p>` : ''}
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <div class="like-container">
+                                <button class="like-button liked" data-post-id="${post.postID}">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <span class="like-count" data-post-id="${post.postID}">${likeCount}</span>
+                            </div>
+                            <small class="text-muted">Like: ${formatDate(post.dataLike)}</small>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Inizializza i pulsanti like
+            LikeManager.init();
+        }
+
+        function getMediaHtml(mediaPath) {
+            if (!mediaPath) return '';
+
+            const extension = mediaPath.split('.').pop().toLowerCase();
+            if (['mp4', 'mov'].includes(extension)) {
+                return `
+                    <video class="card-img-top" controls>
+                        <source src="${mediaPath}" type="video/${extension}">
+                        Il tuo browser non supporta i video.
+                    </video>
+                `;
+            } else {
+                return `<img src="${mediaPath}" class="card-img-top" alt="Immagine post">`;
+            }
+        }
+
+        function formatHashtags(hashtags) {
+            return hashtags.split(' ')
+                .filter(tag => tag.startsWith('#'))
+                .map(tag => `<span class="badge bg-light text-dark">${tag}</span>`)
+                .join(' ');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('it-IT');
+        }
+    </script>
+}

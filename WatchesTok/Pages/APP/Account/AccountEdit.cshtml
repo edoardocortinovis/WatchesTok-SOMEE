@@ -1,0 +1,276 @@
+﻿@page
+@model WatchesTok.Pages.APP.Account.AccountEditModel
+@{
+    ViewData["Title"] = "Modifica Profilo";
+}
+
+<div id="auth-container" class="container mt-4" style="display: none;">
+    <!-- Header section -->
+    <div class="text-center mb-5">
+        <h1 class="text-dark fw-bold">Modifica Profilo</h1>
+        <p class="text-muted">Aggiorna le tue informazioni personali</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert @(Model.IsSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show mb-4" role="alert">
+            @Model.StatusMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Profile edit form -->
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 500px;">
+        <div class="card-body p-4">
+            <form method="post" id="profileForm" class="needs-validation" novalidate>
+                <input type="hidden" id="hiddenEmail" name="Email" />
+
+                <!-- Profile picture -->
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="bg-light rounded-circle d-flex justify-content-center align-items-center"
+                         style="width: 100px; height: 100px; border: 2px dashed #dee2e6;">
+                        <i class="bi bi-person-fill text-secondary" style="font-size: 40px;"></i>
+                    </div>
+                </div>
+
+                <!-- Form fields -->
+                <div class="mb-3">
+                    <label asp-for="Nome" class="form-label">Nome</label>
+                    <input asp-for="Nome" class="form-control" required>
+                    <div class="invalid-feedback">
+                        Per favore inserisci il tuo nome
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Cognome" class="form-label">Cognome</label>
+                    <input asp-for="Cognome" class="form-control" required>
+                    <div class="invalid-feedback">
+                        Per favore inserisci il tuo cognome
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Email</label>
+                    <input id="emailDisplay" class="form-control bg-light" readonly>
+                    <small class="text-muted">L'email non può essere modificata</small>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="d-flex justify-content-between pt-3 border-top">
+                    <a href="/APP/Account/Account" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Annulla
+                    </a>
+                    <button type="submit" id="salvaBtn" class="btn btn-dark">
+                        <i class="fas fa-save me-2"></i>Salva
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Loading state -->
+<div id="loading-container" class="container mt-5 text-center">
+    <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Caricamento...</span>
+    </div>
+    <p class="mt-3 text-muted">Caricamento del tuo profilo...</p>
+</div>
+
+<!-- Not authenticated state -->
+<div id="auth-error-container" class="container mt-5 text-center" style="display: none;">
+    <div class="alert alert-danger mx-auto" style="max-width: 500px;">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        Devi effettuare l'accesso per modificare il profilo
+    </div>
+    <a href="/APP/Authentication/Login?returnUrl=/APP/Account/AccountEdit" class="btn btn-dark mt-3">
+        <i class="fas fa-sign-in-alt me-2"></i>Accedi
+    </a>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    #salvaBtn{
+        background: #1a237e;
+    }
+
+        #salvaBtn:hover{
+            background: #534bae;
+        }
+
+   
+
+    .card {
+        border-radius: 10px;
+        border: none;
+    }
+
+    .form-control {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+        .form-control:focus {
+            border-color: #495057;
+            box-shadow: 0 0 0 0.2rem rgba(73, 80, 87, 0.15);
+        }
+
+    .btn {
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-dark {
+        background-color: #212529;
+        border: none;
+    }
+
+        .btn-dark:hover {
+            background-color: #343a40;
+        }
+
+    .btn-outline-secondary {
+        border-color: #dee2e6;
+    }
+
+    .invalid-feedback {
+        font-size: 0.85rem;
+    }
+
+    @@media (max-width: 576px) {
+        .card {
+            box-shadow: none;
+            border: 1px solid #e9ecef;
+        }
+
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const authContainer = document.getElementById('auth-container');
+            const loadingContainer = document.getElementById('loading-container');
+            const authErrorContainer = document.getElementById('auth-error-container');
+            const emailDisplay = document.getElementById('emailDisplay');
+            const hiddenEmail = document.getElementById('hiddenEmail');
+            const form = document.getElementById('profileForm');
+
+            // Check authentication
+            const userData = JSON.parse(localStorage.getItem('utente'));
+
+            if (!userData || !userData.email) {
+                loadingContainer.style.display = 'none';
+                authErrorContainer.style.display = 'block';
+                return;
+            }
+
+            // Populate form
+            document.getElementById('Nome').value = userData.nome || '';
+            document.getElementById('Cognome').value = userData.cognome || '';
+            emailDisplay.value = userData.email;
+            hiddenEmail.value = userData.email;
+
+            // Show form
+            loadingContainer.style.display = 'none';
+            authContainer.style.display = 'block';
+
+            // Form validation
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+
+                    const salvaBtn = document.getElementById('salvaBtn');
+                    if (salvaBtn) {
+                        salvaBtn.disabled = true;
+                        salvaBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Salvataggio...';
+                    }
+                }, false);
+            }
+
+            // Handle updated data from server
+        @if (TempData["UserData"] != null)
+        {
+            <text>
+                        try {
+                            const updatedData = @Html.Raw(TempData["UserData"]);
+                            const currentData = JSON.parse(localStorage.getItem('utente'));
+
+                            if (currentData) {
+                                const newData = {
+                                    ...currentData,
+                                    nome: updatedData.nome,
+                                    cognome: updatedData.cognome
+                                };
+
+                                localStorage.setItem('utente', JSON.stringify(newData));
+
+                                // Show success message
+                                if (!document.querySelector('.alert-success')) {
+                                    showToast('Profilo aggiornato con successo!');
+                                }
+
+                                // Redirect after delay
+                                setTimeout(() => {
+                                        window.location.href = '/APP/Account/Account';
+                                }, 1500);
+                            }
+                        } catch (error) {
+                            console.error('Error updating local data:', error);
+                        }
+            </text>
+        }
+        });
+
+        function showToast(message) {
+            const toastHtml = `
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header bg-dark text-white">
+                            <strong class="me-auto">WatchesTok</strong>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                const toast = document.querySelector('.toast');
+                if (toast) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 3000);
+        }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

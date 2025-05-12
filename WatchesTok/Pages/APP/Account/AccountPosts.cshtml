@@ -1,0 +1,282 @@
+﻿@page
+@model WatchesTok.Pages.APP.Account.AccountPostsModel
+@{
+    ViewData["Title"] = "I Miei Post";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">I Tuoi Contenuti</h2>
+
+    <!-- Tab navigation -->
+    <ul class="nav nav-pills nav-justified mb-4">
+        <li class="nav-item">
+            <a class="nav-link @(Model.CurrentTab == "my-posts" ? "active" : "")"
+               href="?tab=my-posts&email=@Request.Query["email"]">I Miei Post</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.CurrentTab == "liked-posts" ? "active" : "")"
+               href="?tab=liked-posts&email=@Request.Query["email"]">Post che mi piacciono</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade @(Model.CurrentTab == "my-posts" ? "show active" : "")" id="my-posts">
+            @if (Model.MyPosts.Any())
+            {
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    @foreach (var post in Model.MyPosts)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="@post.MediaPath" class="card-img-top" style="aspect-ratio: 9/16; object-fit: cover;" alt="@post.Titolo">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">@post.Titolo</h5>
+                                    <p class="card-text small text-muted mb-1">@post.MarcaModello</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">@post.DataCreazione.ToString("dd/MM/yyyy")</small>
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-sm btn-link like-button p-0 me-1" data-post-id="@post.PostID">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            <span class="like-count" data-post-id="@post.PostID">@(post.Likes?.Count() ?? 0)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-camera-retro mb-3" style="font-size: 64px; color: #ddd;"></i>
+                    <h4>Non hai ancora pubblicato nulla</h4>
+                    <p class="text-muted">Inizia a condividere i tuoi orologi preferiti!</p>
+                    <a href="/APP/Create" class="btn btn-primary mt-2">
+                        <i class="fas fa-plus me-2"></i>Crea Post
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="tab-pane fade @(Model.CurrentTab == "liked-posts" ? "show active" : "")" id="liked-posts">
+            @if (Model.LikedPosts.Any())
+            {
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    @foreach (var post in Model.LikedPosts)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="@post.MediaPath" class="card-img-top" style="aspect-ratio: 9/16; object-fit: cover;" alt="@post.Titolo">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">@post.Titolo</h5>
+                                    <p class="card-text small text-muted mb-1">@post.MarcaModello</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">@post.DataCreazione.ToString("dd/MM/yyyy")</small>
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-sm btn-link like-button p-0 me-1" data-post-id="@post.PostID">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                            <span class="like-count" data-post-id="@post.PostID">@(post.Likes?.Count() ?? 0)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-heart mb-3" style="font-size: 64px; color: #ddd;"></i>
+                    <h4>Non hai ancora messo like a nessun post</h4>
+                    <p class="text-muted">Esplora e scopri contenuti interessanti!</p>
+                    <a href="/Index" class="btn btn-primary mt-2">
+                        <i class="fas fa-compass me-2"></i>Esplora
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .like-button {
+        color: #6c757d;
+        transition: transform 0.2s, color 0.2s;
+        font-size: 1.1rem;
+    }
+
+        .like-button:hover {
+            transform: scale(1.2);
+            color: #e74c3c;
+        }
+
+        .like-button.liked {
+            color: #e74c3c;
+        }
+
+    .like-count {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    @@keyframes heartPulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.3);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .like-button.liked i {
+        animation: heartPulse 0.5s;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inizializza i pulsanti like
+            initLikeButtons();
+
+            function initLikeButtons() {
+                document.querySelectorAll('.like-button').forEach(button => {
+                    const postId = button.dataset.postId;
+                    const likeCountElement = document.querySelector(`.like-count[data-post-id="${postId}"]`);
+
+                    // Verifica lo stato del like
+                    checkLikeStatus(postId, button, likeCountElement);
+
+                    // Aggiungi evento click se non è già stato inizializzato
+                    if (!button.hasAttribute('data-like-initialized')) {
+                        button.setAttribute('data-like-initialized', 'true');
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleLike(postId, button, likeCountElement);
+                        });
+                    }
+                });
+            }
+
+            function checkLikeStatus(postId, buttonElement, countElement) {
+                // Ottieni utente corrente
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) {
+                    console.log('Utente non autenticato');
+                    return;
+                }
+
+                fetch(`/api/Like/check?postId=${postId}&userEmail=${encodeURIComponent(userData.email)}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Errore nella risposta del server');
+                        return res.json();
+                    })
+                    .then(data => {
+                        updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+                    })
+                    .catch(err => {
+                        console.error('Errore durante la verifica del like:', err);
+                    });
+            }
+
+            function toggleLike(postId, buttonElement, countElement) {
+                // Ottieni utente corrente
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) {
+                    window.location.href = '/APP/log/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                // Disabilita temporaneamente il pulsante
+                buttonElement.disabled = true;
+
+                fetch('/api/Like/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        postId: postId,
+                        userEmail: userData.email
+                    })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Errore nella risposta del server');
+                    return res.json();
+                })
+                .then(data => {
+                    updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+
+                    // Se siamo nella tab "liked-posts" e abbiamo tolto il like, potremmo rimuovere il post
+                    if (!data.liked && window.location.search.includes('tab=liked-posts')) {
+                        const postCard = buttonElement.closest('.col');
+                        if (postCard) {
+                            // Opzionale: aggiungi animazione di uscita
+                            postCard.style.transition = 'opacity 0.5s, transform 0.5s';
+                            postCard.style.opacity = '0';
+                            postCard.style.transform = 'scale(0.8)';
+
+                            // Rimuovi dopo l'animazione
+                            setTimeout(() => {
+                                postCard.remove();
+
+                                // Se non ci sono più post, mostra il messaggio "non ci sono post"
+                                const remainingPosts = document.querySelectorAll('#liked-posts .col').length;
+                                if (remainingPosts === 0) {
+                                    const noPostsMessage = `
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-heart mb-3" style="font-size: 64px; color: #ddd;"></i>
+                                            <h4>Non hai ancora messo like a nessun post</h4>
+                                            <p class="text-muted">Esplora e scopri contenuti interessanti!</p>
+                                            <a href="/Index" class="btn btn-primary mt-2">
+                                                <i class="fas fa-compass me-2"></i>Esplora
+                                            </a>
+                                        </div>
+                                    `;
+                                    document.querySelector('#liked-posts .row').innerHTML = noPostsMessage;
+                                }
+                            }, 500);
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('Errore durante il toggle del like:', err);
+                })
+                .finally(() => {
+                    // Riabilita il pulsante
+                    buttonElement.disabled = false;
+                });
+            }
+
+            function updateLikeUI(buttonElement, countElement, isLiked, likeCount) {
+                // Aggiorna la classe e l'icona
+                if (isLiked) {
+                    buttonElement.classList.add('liked');
+                    buttonElement.querySelector('i').className = 'fas fa-heart';
+                } else {
+                    buttonElement.classList.remove('liked');
+                    buttonElement.querySelector('i').className = 'far fa-heart';
+                }
+
+                // Aggiorna il contatore
+                if (countElement) {
+                    countElement.textContent = likeCount;
+                }
+            }
+        });
+    </script>
+}

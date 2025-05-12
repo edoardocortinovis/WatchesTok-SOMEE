@@ -1,0 +1,981 @@
+﻿@page
+@model WatchesTok.Pages.HomepageModel
+@{
+    ViewData["Title"] = "WatchesTok";
+}
+
+<div class="page-container">
+    <!-- Indicatore di scorrimento discreto -->
+    <div class="scroll-progress-bar">
+        <div class="progress-inner"></div>
+    </div>
+
+    <div class="scroll-wrapper">
+        <div id="feed" class="scroll-container">
+            @if (Model.Posts != null && Model.Posts.Any())
+            {
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="post-card">
+                        <!-- Container ottimizzato per immagini -->
+                        <div class="media-container">
+                            <img src="@post.MediaPath" class="post-image" loading="lazy" alt="@post.Titolo">
+                            <div class="gradient-overlay"></div>
+                        </div>
+
+                        <div class="post-info">
+                            <div class="user-info">
+                                <span class="username">@(post.Utente?.Nome ?? "Utente") @(post.Utente?.Cognome ?? "")</span>
+                                <span class="post-date">@post.DataCreazione.ToString("dd MMM")</span>
+                            </div>
+
+                            <h4>@post.Titolo</h4>
+                            <div class="description-wrap">
+                                <p class="post-description">@post.Descrizione</p>
+                                @if (post.Descrizione.Length > 100)
+                                {
+                                    <div class="fade-overlay"></div>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(post.Hashtags))
+                            {
+                                <div class="hashtags">
+                                    @foreach (var tag in post.Hashtags.Split(' '))
+                                    {
+                                        <span class="hashtag">@tag</span>
+                                    }
+                                </div>
+                            }
+
+                            <div class="post-actions">
+                                <div class="like-container">
+                                    <button class="like-button" data-post-id="@post.PostID">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <span class="like-count" data-post-id="@post.PostID">@post.LikeCount</span>
+                                </div>
+                                <a href="Details?id=@post.PostID" class="details-btn">
+                                    <span>Dettagli</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.HasMorePosts)
+                {
+                    <div id="load-more" class="load-more-indicator">
+                        <div class="spinner"></div>
+                        <span>Carico altri post...</span>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="post-card no-posts">
+                    <div class="post-info">
+                        <h4>Nessun post trovato</h4>
+                        <p>Sii il primo a condividere un orologio!</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Import Font Awesome (assicurati di includere il link nel head del documento) */
+    @@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
+    /* Import Google Fonts */
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+        --navbar-top-height: 60px;
+        --navbar-bottom-height: 60px;
+        --primary-color: #0275d8;
+        --primary-dark: #0056b3;
+        --text-color: #ffffff; /* Invertito: da nero a bianco */
+        --bg-color: #121212; /* Invertito: da bianco a scuro */
+        --gray-100: rgba(255,255,255,0.1); /* Invertito: opacità sul bianco */
+        --gray-200: rgba(255,255,255,0.2); /* Invertito: opacità sul bianco */
+        --gray-300: rgba(255,255,255,0.3); /* Invertito: opacità sul bianco */
+        --transition: all 0.25s ease;
+        --shadow-sm: 0 2px 10px rgba(0,0,0,0.2); /* Aumentata intensità ombra */
+        --shadow-md: 0 5px 20px rgba(0,0,0,0.3); /* Aumentata intensità ombra */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 20px;
+        --nav-bg-color: #0a0a0a; /* Navbar più scura del background */
+        --nav-border: rgba(255,255,255,0.1);
+    }
+
+    /* Reset layout */
+    body {
+        margin: 0;
+        background: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Poppins', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        padding-bottom: 0 !important;
+    }
+
+    /* Layout di base */
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        height: 88vh;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .main-content {
+        padding-bottom: 0 !important; /* Rimuove il padding-bottom di 70px */
+        padding-top: 0 !important;
+    }
+
+    .pb-3 {
+        padding-bottom: 0 !important;
+    }
+
+    /* Indicatore di progresso minimalista */
+    .scroll-progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: rgba(255,255,255,0.05); /* Invertito: opacità sul bianco */
+        z-index: 1000;
+    }
+
+    .progress-inner {
+        height: 100%;
+        width: 0%;
+        background: var(--primary-color);
+        transition: width 0.1s ease;
+    }
+
+    /* Container di scroll */
+    .scroll-wrapper {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .scroll-container {
+        height: 100%;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        padding-bottom: var(--navbar-bottom-height);
+    }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+    /* Post Card - Design minimalista con focus sulle immagini */
+    .post-card {
+        height: 100%;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    /* Container per la gestione ottimizzata delle immagini */
+    .media-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.4); /* Sfondo scuro per aumentare il contrasto */
+    }
+
+        .media-container:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3); /* Overlay scuro su tutta l'immagine */
+            z-index: 2;
+        }
+
+
+    /* Ottimizzazione immagini */
+    .post-image {
+        width: 92%; /* Ridotta leggermente dal 100% */
+        height: 92%; /* Ridotta leggermente dal 100% */
+        object-fit: cover; /* Mantiene le proporzioni senza distorsioni */
+        object-position: center; /* Centra l'immagine */
+        margin: 4% auto; /* Centra l'immagine con margini uniformi */
+        display: block; /* Importante per il margine auto */
+        transition: transform 0.5s ease-out; /* Transizione più veloce */
+        transform: scale(1.02); /* Zoom iniziale ridotto da 1.05 a 1.02 */
+        will-change: transform; /* Ottimizzazione performance */
+        border-radius: 8px; /* Bordi leggermente arrotondati */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Ombra per effetto profondità */
+    }
+
+    .post-card:hover .post-image {
+        transform: scale(1.0); /* Effetto zoom-out ancora più sottile */
+    }
+
+    /* Gradient overlay ottimizzato per leggibilità - tema scuro */
+    .gradient-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 85%; /* Aumentato da 75% a 85% per coprire più superficie */
+        background: linear-gradient( to top, rgba(0, 0, 0, 0.95) 0%, /* Più scuro alla base */
+        rgba(0, 0, 0, 0.85) 20%, /* Aumentata opacità in ogni livello */
+        rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0.1) 95%, transparent 100% );
+        z-index: 3; /* Aumentato da 2 a 3 per sovrapporsi all'overlay generale */
+        pointer-events: none;
+    }
+
+
+    /* Info post con design minimalista */
+    .post-info {
+        position: relative;
+        z-index: 4; /* Aumentato da 3 a 4 per stare sopra tutti gli overlay */
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Leggero effetto ombra testo */
+    }
+
+        .post-info h4 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            color: white; /* Bianco puro per massima leggibilità */
+        }
+
+    .no-posts .post-info {
+        background: rgba(255, 255, 255, 0.05); /* Invertito: grigio scuro */
+        border-radius: var(--radius-md);
+        padding: 2rem;
+        margin: auto;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* User info minimalista */
+    .user-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .username {
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+
+    .post-date {
+        font-size: 0.8rem;
+        opacity: 0.7;
+    }
+
+    /* Tipografia chiara e minimalista */
+    .post-info h4 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+    }
+
+    /* Descrizione con contenimento intelligente */
+    .description-wrap {
+        position: relative;
+        max-height: 4em; /* Circa 2-3 righe di testo */
+        overflow: hidden;
+    }
+
+    .post-description {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.95); /* Quasi bianco puro */
+    }
+
+    .fade-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 25px;
+        background: linear-gradient(transparent, rgba(18, 18, 18, 0.95)); /* Invertito: sfuma su nero */
+    }
+
+    /* Badge modello orologio minimalista - tema scuro */
+    .watch-model {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.15); /* Invertito: grigio scuro */
+        border-radius: 50px;
+        padding: 6px 15px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-top: 5px;
+        transition: var(--transition);
+    }
+
+        .watch-model:hover {
+            background: rgba(255, 255, 255, 0.25); /* Invertito: grigio scuro hover */
+            transform: translateY(-2px);
+        }
+
+        .watch-model i {
+            color: var(--primary-color);
+        }
+
+    /* Hashtags minimalisti - tema scuro */
+    .hashtags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .hashtag {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7); /* Invertito: testo bianco con opacità */
+        transition: var(--transition);
+    }
+
+        .hashtag:after {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3); /* Invertito: puntino bianco con opacità */
+            border-radius: 50%;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .hashtag:last-child:after {
+            display: none;
+        }
+
+        .hashtag:hover {
+            color: var(--text-color);
+        }
+
+    /* Azioni post minimaliste - tema scuro */
+    .post-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Invertito: bordo grigio scuro */
+    }
+
+    .like-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Pulsante like pulito - tema scuro */
+    .like-button {
+        background: transparent;
+        border: none;
+        color: var(--text-color); /* Usa la variabile del colore testo */
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 5px;
+        transition: var(--transition);
+    }
+
+        .like-button:hover {
+            transform: scale(1.1);
+        }
+
+        .like-button.liked {
+            color: #ff3b5c; /* Mantenuto il colore del cuore "mi piace" */
+        }
+
+    .like-count {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    /* Pulsante dettagli minimalista */
+    .details-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--primary-color);
+        color: white; /* Mantenuto bianco per contrasto sul pulsante blu */
+        border: none;
+        border-radius: 50px;
+        padding: 8px 15px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+        .details-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .details-btn i {
+            font-size: 0.8rem;
+            transition: transform 0.2s ease;
+        }
+
+        .details-btn:hover i {
+            transform: translateX(3px);
+        }
+
+    /* Indicatore di caricamento minimalista - tema scuro */
+    .load-more-indicator {
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color); /* Usa la variabile del colore testo */
+        gap: 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Spinner pulito - tema scuro */
+    .spinner {
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(255, 255, 255, 0.1); /* Invertito: bordo grigio scuro */
+        border-top: 2px solid var(--primary-color); /* Mantenuto colore primario */
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @@keyframes spin {
+        0%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* Animazione per like */
+    @@keyframes heartBeat {
+        0%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+    }
+
+    .like-button.liked i {
+        animation: heartBeat 0.4s;
+    }
+
+    /* Header/Navbar personalizzata - tema scuro */
+    header, .navbar {
+        background-color: var(--nav-bg-color) !important;
+        border-bottom: 1px solid var(--nav-border);
+    }
+
+    /* Dropdown utente - tema scuro */
+    .dropdown-toggle, .dropdown-menu {
+        background-color: #1e1e1e !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--gray-200) !important;
+    }
+
+    .dropdown-item {
+        color: var(--text-color) !important;
+        background-color: #1e1e1e !important;
+    }
+
+        .dropdown-item:hover {
+            background-color: #2c2c2c !important;
+        }
+
+    /* Bottom Navigation Bar - tema scuro */
+    .navbar-fixed-bottom {
+        background-color: var(--nav-bg-color) !important;
+        border-top: 1px solid var(--nav-border);
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: var(--navbar-bottom-height);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        z-index: 1000;
+    }
+
+        .navbar-fixed-bottom a {
+            color: var(--gray-300);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+            .navbar-fixed-bottom a.active,
+            .navbar-fixed-bottom a:hover {
+                color: var(--primary-color);
+            }
+
+        .navbar-fixed-bottom i {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+    /* CSS specifico per bottom-nav - Tema scuro */
+    .bottom-nav {
+        background-color: #0a0a0a !important; /* Nero molto scuro */
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+        /* Links nella bottom-nav */
+        .bottom-nav a {
+            color: rgba(255,255,255,0.7) !important; /* Bianco con opacità */
+            transition: color 0.3s ease;
+        }
+
+            /* Stato active o hover */
+            .bottom-nav a.active,
+            .bottom-nav a:hover {
+                color: #0275d8 !important; /* Colore primario */
+            }
+
+        /* Icone nella bottom-nav */
+        .bottom-nav i {
+            color: inherit;
+        }
+
+        /* Se hai un contenitore per l'icona aggiuntivo */
+        .bottom-nav .icon-container {
+            background-color: transparent !important;
+        }
+
+        /* Se hai badge o indicatori nella navbar */
+        .bottom-nav .badge,
+        .bottom-nav .indicator {
+            background-color: #0275d8 !important;
+            color: white !important;
+        }
+
+    /* Floating Action Button */
+    .btn-floating {
+        position: fixed;
+        bottom: calc(var(--navbar-bottom-height) + 10px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 56px;
+        height: 56px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-md);
+        z-index: 1001;
+        border: none;
+        transition: var(--transition);
+    }
+
+        .btn-floating:hover {
+            background-color: var(--primary-dark);
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .btn-floating i {
+            font-size: 1.8rem;
+        }
+
+    /* Ottimizzazioni per dispositivi mobili */
+    @@media (max-width: 768px) {
+        .post-info
+
+    {
+        padding: 1.2rem;
+    }
+
+    .post-info h4 {
+        font-size: 1.3rem;
+    }
+
+    .description-wrap {
+        max-height: 3.6em;
+    }
+
+    .watch-model {
+        padding: 5px 12px;
+        font-size: 0.85rem;
+    }
+
+    }
+
+    @@media (max-width: 480px) {
+        .post-info
+
+    {
+        padding: 1rem;
+    }
+
+    .post-info h4 {
+        font-size: 1.2rem;
+    }
+
+    .description-wrap {
+        max-height: 3.2em;
+    }
+
+    .like-button {
+        font-size: 1.2rem;
+    }
+
+    .details-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementi principali
+            const feed = document.getElementById('feed');
+            const progressBar = document.querySelector('.progress-inner');
+            const postCards = document.querySelectorAll('.post-card');
+
+            // Sistema di miglioramento immagini
+            enhanceImageLoading();
+
+            // Gestione progress bar
+            initProgressBar();
+
+            // Sistema di like
+            initLikeButtons();
+
+            // Scroll infinito
+            initInfiniteScroll();
+
+            // Ottimizzazione caricamento immagini
+            function enhanceImageLoading() {
+                document.querySelectorAll('.post-image').forEach(img => {
+                    // Placeholder di caricamento bassa risoluzione
+                    const originalSrc = img.src;
+
+                    // Verifica se l'immagine è già nel cache
+                    const imageLoaded = img.complete && img.naturalHeight !== 0;
+                    if (!imageLoaded) {
+                        // Se non è caricata, applica un effetto di blur iniziale
+                        img.style.filter = 'blur(10px)';
+                        img.style.transform = 'scale(1.05)';
+                    }
+
+                    // Listener per il caricamento
+                    img.onload = function() {
+                        // Rimuovi gradualmente il blur quando l'immagine è completamente caricata
+                        img.style.filter = 'blur(0)';
+
+                        // Imposta attributi per ottimizzare il rendering
+                        img.setAttribute('decoding', 'async');
+                        img.setAttribute('importance', 'high');
+
+                        // Controlla se l'immagine è troppo piccola per il container
+                        checkImageQuality(img);
+                    };
+
+                    // Forza il reload se l'immagine è già nel cache
+                    if (imageLoaded) {
+                        img.onload();
+                    }
+                });
+            }
+
+            // Verifica qualità immagine
+            function checkImageQuality(img) {
+                // Se l'immagine è molto più piccola del container, gestisci il ridimensionamento
+                const container = img.parentElement;
+                const containerWidth = container.offsetWidth;
+                const containerHeight = container.offsetHeight;
+
+                // Se l'immagine è più piccola di 1/3 del container, cambia object-fit
+                if (img.naturalWidth < containerWidth / 3 || img.naturalHeight < containerHeight / 3) {
+                    // Immagine di bassa qualità - cambia object-fit per migliorare la visualizzazione
+                    img.style.objectFit = 'contain';
+                    img.style.backgroundColor = 'rgba(0,0,0,0.9)';
+                    container.style.background = 'rgba(0,0,0,0.9)';
+                }
+            }
+
+            // Progress bar durante lo scroll
+            function initProgressBar() {
+                if (!feed || !progressBar) return;
+
+                feed.addEventListener('scroll', function() {
+                    const scrollPosition = feed.scrollTop;
+                    const maxScroll = feed.scrollHeight - feed.clientHeight;
+                    const scrollPercentage = (scrollPosition / maxScroll) * 100;
+                    progressBar.style.width = `${scrollPercentage}%`;
+                });
+            }
+
+            // Sistema di like
+            function initLikeButtons() {
+                document.querySelectorAll('.like-button').forEach(button => {
+                    const postId = button.dataset.postId;
+                    const likeCountElement = document.querySelector(`.like-count[data-post-id="${postId}"]`);
+
+                    // Verifica lo stato del like
+                    checkLikeStatus(postId, button, likeCountElement);
+
+                    // Click event per like
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        toggleLike(postId, button, likeCountElement);
+                    });
+
+                    // Double tap per mobile
+                    const postCard = button.closest('.post-card');
+                    let lastTap = 0;
+
+                    postCard.addEventListener('touchend', function(e) {
+                        const currentTime = new Date().getTime();
+                        const tapLength = currentTime - lastTap;
+
+                        if (tapLength < 300 && tapLength > 0) {
+                            // Double tap rilevato
+                            e.preventDefault();
+                            toggleLike(postId, button, likeCountElement);
+                            showHeartAnimation(postCard);
+                        }
+
+                        lastTap = currentTime;
+                    });
+                });
+
+                // Animazione cuore centrale
+                function showHeartAnimation(postCard) {
+                    const heart = document.createElement('div');
+                    heart.style.position = 'absolute';
+                    heart.style.top = '50%';
+                    heart.style.left = '50%';
+                    heart.style.transform = 'translate(-50%, -50%)';
+                    heart.style.fontSize = '70px';
+                    heart.style.color = '#ff3b5c';
+                    heart.style.zIndex = '100';
+                    heart.style.opacity = '0';
+                    heart.style.transition = 'all 0.5s ease';
+                    heart.innerHTML = '<i class="fas fa-heart"></i>';
+
+                    postCard.appendChild(heart);
+
+                    // Animazione
+                    setTimeout(() => {
+                        heart.style.opacity = '1';
+                        heart.style.transform = 'translate(-50%, -50%) scale(1.2)';
+                    }, 50);
+
+                    setTimeout(() => {
+                        heart.style.opacity = '0';
+                        heart.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                    }, 800);
+
+                    setTimeout(() => {
+                        postCard.removeChild(heart);
+                    }, 1200);
+                }
+
+                // Verifica lo stato del like
+                function checkLikeStatus(postId, buttonElement, countElement) {
+                    // Ottieni utente corrente
+                    const userData = JSON.parse(localStorage.getItem('userData'));
+                    if (!userData || !userData.email) {
+                        console.log('Utente non autenticato');
+                        return;
+                    }
+
+                    fetch(`/api/Like/check?postId=${postId}&userEmail=${encodeURIComponent(userData.email)}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error('Errore nella risposta del server');
+                            return res.json();
+                        })
+                        .then(data => {
+                            updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+                        })
+                        .catch(err => {
+                            console.error('Errore durante la verifica del like:', err);
+                        });
+                }
+
+                // Toggle del like
+                function toggleLike(postId, buttonElement, countElement) {
+                    // Ottieni utente corrente
+                    const userData = JSON.parse(localStorage.getItem('userData'));
+                    if (!userData || !userData.email) {
+                        // Reindirizza al login se non autenticato
+                        window.location.href = '/APP/log/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                        return;
+                    }
+
+                    // Disabilita temporaneamente il pulsante
+                    buttonElement.disabled = true;
+
+                    fetch('/api/Like/toggle', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            postId: postId,
+                            userEmail: userData.email
+                        })
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Errore nella risposta del server');
+                        return res.json();
+                    })
+                    .then(data => {
+                        updateLikeUI(buttonElement, countElement, data.liked, data.likeCount);
+                    })
+                    .catch(err => {
+                        console.error('Errore durante il toggle del like:', err);
+                    })
+                    .finally(() => {
+                        // Riabilita il pulsante
+                        buttonElement.disabled = false;
+                    });
+                }
+
+                // Aggiorna l'interfaccia utente del like
+                function updateLikeUI(buttonElement, countElement, isLiked, likeCount) {
+                    // Aggiorna la classe e l'icona
+                    if (isLiked) {
+                        buttonElement.classList.add('liked');
+                        buttonElement.querySelector('i').className = 'fas fa-heart';
+                    } else {
+                        buttonElement.classList.remove('liked');
+                        buttonElement.querySelector('i').className = 'far fa-heart';
+                    }
+
+                    // Aggiorna il contatore con animazione
+                    if (countElement && countElement.textContent != likeCount) {
+                        countElement.style.transform = 'scale(1.2)';
+                        countElement.style.transition = 'transform 0.2s ease';
+
+                        setTimeout(() => {
+                            countElement.textContent = likeCount;
+                            countElement.style.transform = 'scale(1)';
+                        }, 150);
+                    }
+                }
+            }
+
+            // Infinite scroll
+            function initInfiniteScroll() {
+                let nextPage = @(Model.CurrentPage + 1);
+                let isLoading = false;
+
+                feed.addEventListener('scroll', checkScroll);
+
+                function checkScroll() {
+                    if (isLoading) return;
+
+                    const loadMoreElement = document.getElementById('load-more');
+                    if (!loadMoreElement) return;
+
+                    const rect = loadMoreElement.getBoundingClientRect();
+                    const isVisible = rect.top <= window.innerHeight;
+
+                    if (isVisible) {
+                        loadMorePosts();
+                    }
+                }
+
+                async function loadMorePosts() {
+                    if (isLoading) return;
+                    isLoading = true;
+
+                    try {
+                        const marca = '@Model.MarcaFiltro';
+                        const url = `/Homepage?handler=MorePosts&page=${nextPage}${marca ? '&marca=' + marca : ''}`;
+
+                        const response = await fetch(url, {
+                            headers: {
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                            }
+                        });
+
+                        if (response.ok) {
+                            const html = await response.text();
+                            const loadMoreElement = document.getElementById('load-more');
+
+                            if (loadMoreElement) {
+                                loadMoreElement.insertAdjacentHTML('beforebegin', html);
+
+                                nextPage++;
+
+                                // Inizializza sistemi per nuovi post
+                                enhanceImageLoading();
+                                initLikeButtons();
+
+                                // Rimuovi l'indicatore se non ci sono più post
+                                if (!html.includes('post-card')) {
+                                    loadMoreElement.remove();
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error loading more posts:', error);
+                    } finally {
+                        isLoading = false;
+                    }
+                }
+            }
+        });
+    </script>
+}

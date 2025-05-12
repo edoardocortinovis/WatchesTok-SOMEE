@@ -1,0 +1,812 @@
+﻿<!DOCTYPE html>
+<html lang="it" class="h-100">
+<head>
+    @RenderSection("Styles", required: false)
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"] - WatchesTok</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WatchesTok.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Stile completo aggiornato per WatchesTok - ottimizzato per mobile */
+        :root {
+            --primary-color: #1a237e;
+            --primary-light: #534bae;
+            --primary-dark: #000051;
+            --secondary-color: #ffab00;
+            --secondary-light: #ffdd4b;
+            --secondary-dark: #c67c00;
+            --text-on-primary: #ffffff;
+            --text-on-secondary: #000000;
+            --surface-color: #ffffff;
+            --background-color: #ffffff;
+            --error-color: #b00020;
+            --success-color: #00695c;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 10px rgba(0,0,0,0.08), 0 0 6px rgba(0,0,0,0.05);
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: #212121;
+            padding-bottom: 80px; /* Spazio per la bottom nav */
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            padding-bottom: 3px;
+        }
+
+            .navbar-brand:after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 30%;
+                height: 2px;
+                background: linear-gradient(90deg, var(--primary-color), transparent);
+            }
+
+        .navbar-toggler {
+            padding: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            background: linear-gradient(135deg, #2d2870 0%, #534bae 50%, #7667cf 100%); /* Cambiato da "red" a "transparent" */
+        }
+
+        /* Assicurati che l'icona sia visibile */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: middle;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 100%;
+        }
+
+        .navbar {
+            padding: 12px 0 !important;
+        }
+
+        .navbar-brand {
+            margin-right: 20px;
+        }
+
+        /* Header styling */
+        .main-header {
+            background-color: var(--surface-color);
+            box-shadow: var(--box-shadow);
+            border-bottom: none !important;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+            .main-header .navbar {
+                padding: 12px 0;
+            }
+
+        .nav-link {
+            font-weight: 500;
+            color: #424242 !important;
+            position: relative;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+            .nav-link:hover {
+                color: var(--primary-color) !important;
+            }
+
+            .nav-link:after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: var(--primary-color);
+                transition: width 0.3s ease;
+            }
+
+            .nav-link:hover:after,
+            .nav-link.active:after {
+                width: 100%;
+            }
+
+            .nav-link.active {
+                color: var(--primary-color) !important;
+                font-weight: 600;
+            }
+
+            /* Stile per il pulsante dashboard admin */
+            .nav-link.admin-dashboard {
+                color: #424242 !important;
+                font-weight: 500;
+            }
+
+                .nav-link.admin-dashboard:hover {
+                    color: var(--primary-color) !important;
+                }
+
+                .nav-link.admin-dashboard.active {
+                    color: var(--primary-color) !important;
+                    font-weight: 600;
+                }
+
+                .nav-link.admin-dashboard:after {
+                    background-color: var(--primary-color);
+                }
+                .nav-link.admin-dashboard i {
+                    margin-right: 5px;
+                }
+
+        /* Badge per l'admin */
+        .admin-badge {
+            background-color: var(--secondary-color);
+            color: var(--text-on-secondary);
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            font-weight: 600;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Bottom navigation - Completamente ridisegnata per mobile */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background-color: white;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            padding-bottom: env(safe-area-inset-bottom, 0); /* Per iPhone con notch */
+        }
+
+        .nav-item-bottom {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: #555;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            height: 100%;
+        }
+
+            .nav-item-bottom i {
+                font-size: 24px;
+                margin-bottom: 4px;
+                transition: transform 0.3s ease;
+            }
+
+            .nav-item-bottom:hover {
+                color: var(--primary-color);
+            }
+
+                .nav-item-bottom:hover i {
+                    transform: translateY(-2px);
+                }
+
+            .nav-item-bottom.active {
+                color: var(--primary-color);
+                font-weight: 500;
+            }
+
+        /* Pulsante Crea - Completamente ridisegnato per mobile */
+        .create-button-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+        }
+
+        .create-button {
+            width: 65px;
+            height: 65px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.4);
+            border: 3px solid white;
+            transition: all 0.3s ease;
+            z-index: 1010;
+            color: white;
+            position: absolute;
+            bottom: 10px; /* Posizionato sopra la barra */
+            transform: translateY(-50%);
+        }
+
+            .create-button i {
+                color: white;
+                font-size: 28px;
+            }
+
+            .create-button:hover {
+                transform: translateY(calc(-50% - 4px));
+                box-shadow: 0 8px 20px rgba(26, 35, 126, 0.5);
+            }
+
+            .create-button:active {
+                transform: translateY(calc(-50% - 2px));
+                box-shadow: 0 5px 10px rgba(26, 35, 126, 0.3);
+            }
+
+        .create-label {
+            font-size: 12px;
+            opacity: 0.8;
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Auth section styling */
+        .auth-btn {
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+            .btn-outline-primary:hover {
+                background-color: var(--primary-light);
+                border-color: var(--primary-light);
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+        /* User dropdown */
+        .user-dropdown {
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            padding: 8px !important;
+            background-color: #e9ecef !important;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.1) !important;
+            position: relative;
+            min-width: 40px;
+            min-height: 40px;
+            margin-left: 8px;
+        }
+
+            .user-dropdown:hover,
+            .user-dropdown:focus {
+                background-color: #d1d7dd !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border: 2px solid white;
+        }
+
+        /* Aggiungi un'icona che indica la presenza del menu */
+        .user-dropdown::after {
+            margin-left: 8px;
+            display: inline-block;
+            color: var(--primary-dark);
+        }
+
+        .dropdown-menu {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: none;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+            .dropdown-item:hover {
+                background-color: rgba(0,0,0,0.03);
+                transform: translateX(5px);
+            }
+
+            .dropdown-item i {
+                width: 20px;
+                text-align: center;
+                margin-right: 8px;
+                color: var(--primary-color);
+            }
+
+        /* Main content area */
+        .main-content {
+            min-height: calc(100vh - 150px);
+            padding-top: 20px;
+            padding-bottom: 70px; /* Spazio per la bottom nav */
+        }
+
+        /* Animations */
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Watch dial decoration per dropdown menu */
+        .watch-dial-decoration {
+            position: relative;
+        }
+
+            .watch-dial-decoration::before {
+                content: "";
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                border: 2px solid rgba(0,0,0,0.1);
+                border-radius: 50%;
+                top: -20px;
+                right: -20px;
+                z-index: -1;
+            }
+
+            .watch-dial-decoration::after {
+                content: "";
+                position: absolute;
+                width: 60px;
+                height: 60px;
+                border: 2px solid rgba(0,0,0,0.05);
+                border-radius: 50%;
+                bottom: -30px;
+                left: -30px;
+                z-index: -1;
+            }
+
+        /* Animazione per il pulsante crea */
+        @@keyframes pulseButton {
+            0%
+
+        {
+            box-shadow: 0 0 0 0 rgba(26, 35, 126, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 15px rgba(26, 35, 126, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(26, 35, 126, 0);
+        }
+
+        }
+
+        .create-button {
+            animation: pulseButton 2s infinite;
+        }
+
+        /* Media queries per design responsive - OTTIMIZZATO PER MOBILE */
+        /* Migliorie per la navbar mobile */
+
+        @@media (max-width: 991px) { /* Modificato da 767px a 991px */
+            /* Miglioramento stile navbar */
+            .navbar-brand
+
+        {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .user-dropdown {
+            min-width: 32px;
+            min-height: 32px;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+        }
+
+        /* Ridisegnare il pulsante hamburger */
+        .navbar-toggler {
+            padding: 8px;
+            border: none;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            margin-left: auto;
+            transition: all 0.2s ease;
+        }
+
+            .navbar-toggler:focus {
+                box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.3);
+            }
+
+        /* Icona hamburger bianca */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .user-dropdown span {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+        /* Assicurati che ci sia abbastanza spazio per il nome */
+        #auth-section .dropdown {
+            max-width: 150px;
+        }
+
+        /* Miglioramento del dropdown utente */
+        .user-dropdown {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+            border: none !important;
+            /*padding: 6px !important;*/
+            margin-bottom: 0;
+            margin-right: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+            border: none;
+        }
+
+        /* Allineamento migliore per "Per te" */
+        .navbar-nav {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            margin-left: 5px;
+        }
+
+        /* Migliore layout per il collasso della navbar */
+        .navbar-collapse {
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-bottom: 5px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Container più ampio */
+        .container {
+            max-width: 100%;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        }
+
+        /* Ottimizzazioni per schermi molto piccoli */
+        @@media (max-width: 360px) {
+            .navbar-brand
+
+        {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .user-dropdown {
+            min-width: 32px;
+            min-height: 32px;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+        }
+
+        .create-button {
+            width: 55px;
+            height: 55px;
+        }
+
+            .create-button i {
+                font-size: 22px;
+            }
+
+        .nav-item-bottom i {
+            font-size: 18px;
+        }
+
+        .nav-item-bottom {
+            font-size: 10px;
+        }
+
+        }</style>
+</head>
+<body>
+    <header class="main-header animate-in">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" asp-page="/Index">
+                    WatchesTok
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link @(Context.Request.Path == "/APP/Homepage/Homepage" ? "active" : "")" asp-page="/APP/Homepage/Homepage">
+                                <i class="fas fa-stream me-1"></i> Per te
+                            </a>
+                        </li>
+                        <!-- PULSANTE DASHBOARD ADMIN (sarà mostrato/nascosto via JavaScript) -->
+                        <li class="nav-item" id="admin-dashboard-nav">
+                            <a class="nav-link admin-dashboard @(Context.Request.Path == "/APP/Admin/Admin" ? "active" : "")" href="/APP/Admin/Admin">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard Admin
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="auth-section" class="d-flex align-items-center">
+                        <!-- Auth content will be injected here by script -->
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container main-content animate-in" style="animation-delay: 0.1s">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Simplified bottom navigation structure for better mobile view -->
+    <div class="bottom-nav">
+        <a href="/Index" class="nav-item-bottom @(Context.Request.Path == "/Index" || Context.Request.Path == "/" ? "active" : "")">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+
+        <!-- PULSANTE CREA che verrà nascosto per admin -->
+        <div class="create-button-container" id="create-button-container">
+            <a href="/APP/CreatePost/CreatePost" class="create-button">
+                <i class="fas fa-plus"></i>
+            </a>
+            <span class="create-label">Crea</span>
+        </div>
+
+        <a href="/APP/Account/Account" class="nav-item-bottom @(Context.Request.Path.Value.Contains("Account") ? "active" : "")">
+            <i class="fas fa-user"></i>
+            <span>Profilo</span>
+        </a>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Funzione per controllare se l'utente è admin
+        function isUserAdmin() {
+            // Controlla il flag diretto
+            if (localStorage.getItem('isAdmin') === 'true') {
+                return true;
+            }
+
+            // Controlla l'email nell'oggetto userData
+            const userDataStr = localStorage.getItem('userData');
+            if (userDataStr) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    if (userData && userData.email === 'admin@admin.it') {
+                        return true;
+                    }
+                } catch (e) {
+                    console.error("Errore nel parsing di userData", e);
+                }
+            }
+
+            // Controlla l'email nell'oggetto utente completo
+            const utenteStr = localStorage.getItem('utente');
+            if (utenteStr) {
+                try {
+                    const utente = JSON.parse(utenteStr);
+                    if (utente && utente.email === 'admin@admin.it') {
+                        return true;
+                    }
+                } catch (e) {
+                    console.error("Errore nel parsing di utente", e);
+                }
+            }
+
+            return false;
+        }
+
+        function updateAuthUI() {
+            const authSection = document.getElementById('auth-section');
+            const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            const userDataStr = localStorage.getItem('utente');
+            const utente = userDataStr ? JSON.parse(userDataStr) : {};
+            const userEmail = utente.email || userData.email;
+            const userName = utente.nome ? `${utente.nome} ${utente.cognome}` : userEmail;
+
+            // Verifica se l'utente è admin
+            const adminStatus = isUserAdmin();
+
+            // Gestisci la visibilità del pulsante dashboard admin
+            const adminDashboardNav = document.getElementById('admin-dashboard-nav');
+            if (adminDashboardNav) {
+                adminDashboardNav.style.display = adminStatus ? 'block' : 'none';
+            }
+
+            // Gestisci la visibilità del pulsante crea
+            const createButtonContainer = document.getElementById('create-button-container');
+            if (createButtonContainer) {
+                createButtonContainer.style.display = adminStatus ? 'none' : 'flex';
+            }
+
+            if (isAuthenticated) {
+                let adminBadge = adminStatus ? '<span class="admin-badge ms-2">Admin</span>' : '';
+
+                authSection.innerHTML = `
+                    <div class="dropdown">
+                        <button class="user-dropdown dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-avatar">
+                                ${userName.charAt(0).toUpperCase()}
+                            </div>
+                            <span class="ms-2">${userName}${adminBadge}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end watch-dial-decoration">
+                            ${adminStatus ? `
+                            <li>
+                                <a class="dropdown-item" href="/APP/Admin/Admin">
+                                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            ` : ''}
+                            <li>
+                                <a class="dropdown-item" href="/APP/Account/Account">
+                                    <i class="fas fa-user-circle"></i>Il mio profilo
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <button class="dropdown-item text-danger" onclick="logout()">
+                                    <i class="fas fa-sign-out-alt"></i>Esci
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                authSection.innerHTML = `
+                    <div class="d-flex gap-2">
+                        <a href="/APP/Authentication/signin" class="btn btn-outline-primary auth-btn">Registrati</a>
+                        <a href="/APP/Authentication/login" class="btn btn-primary auth-btn">Accedi</a>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateAuthUI();
+
+            // Gestione elementi animati
+            const animatedElements = document.querySelectorAll('.animate-in');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, 100);
+            });
+
+            // Blocca accesso a login/registra se autenticato
+            const protectedPaths = ['/app/authentication/login', '/app/authentication/signin'];
+            const currentPath = window.location.pathname.toLowerCase();
+
+            if (localStorage.getItem('isAuthenticated') === 'true' &&
+                protectedPaths.some(path => currentPath.includes(path))) {
+                window.location.href = '/';
+            }
+        });
+
+        window.addEventListener('storage', updateAuthUI);
+
+        // Funzione per attivare/disattivare dark mode (può essere collegata a un toggle)
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+        }
+
+        // Ripristina la preferenza dark mode al caricamento
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
